@@ -8,6 +8,12 @@ export async function POST(req: NextRequest) {
     if (!userData || !userData.id) {
       return NextResponse.json({ error: 'Invalid user data' }, { status: 400 });
     }
+
+    let user = await prisma.user.findUnique({
+      where: { telegramId: userData.id },
+      select: {
+        telegramId: true,
+        username: true,
         firstName: true,
         lastName: true,
         points: true,
