@@ -35,7 +35,7 @@ export default function HomeUI({
   const [farming, setFarming] = useState(false);
   const [farmAmount, setFarmAmount] = useState(0);
   const [farmTimer, setFarmTimer] = useState(0);
-  const [points, setPoints] = useState(user.points);
+  const [totalPoints, setTotalPoints] = useState(user.points);
 
   useEffect(() => {
     const link = document.createElement('link');
@@ -46,7 +46,10 @@ export default function HomeUI({
   }, []);
 
   useEffect(() => {
-    // Check if there's an active farming session on load
+    setTotalPoints(user.points);
+  }, [user.points]);
+
+  useEffect(() => {
     const checkFarmingStatus = async () => {
       try {
         const res = await fetch('/api/check-farming', {
@@ -62,7 +65,14 @@ export default function HomeUI({
             setFarming(true);
             setFarmTimer(60 - elapsedTime);
             setFarmAmount(data.farmAmount);
-            startFarming(60 - elapsedTime);
+            startFarming(60 - elapsedTime, data.farmAmount);
+          } else {
+            // If more than 60 seconds have passed, end the farming session
+            await fetch('/api/end-farming', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ telegramId: user.telegramId }),
+            });
           }
         }
       } catch (error) {
@@ -73,23 +83,39 @@ export default function HomeUI({
     checkFarmingStatus();
   }, [user.telegramId]);
 
-  const startFarming = async (duration = 60) => {
+  const updateFarmProgress = async (amount: number) => {
+    try {
+      await fetch('/api/update-farm-progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          telegramId: user.telegramId, 
+          farmAmount: amount 
+        }),
+      });
+    } catch (error) {
+      console.error('Error updating farm progress:', error);
+    }
+  };
+
+  const startFarming = async (duration = 60, initialAmount = 0) => {
     if (farming) return;
     
     setFarming(true);
     setFarmTimer(duration);
-    setFarmAmount(0);
+    setFarmAmount(initialAmount);
 
     try {
-      // Start farming session in database
-      await fetch('/api/start-farming', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ telegramId: user.telegramId }),
-      });
+      if (initialAmount === 0) {
+        await fetch('/api/start-farming', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ telegramId: user.telegramId }),
+        });
+      }
 
-      let localAmount = 0;
-      let timeElapsed = 0;
+      let localAmount = initialAmount;
+      let timeElapsed = 60 - duration;
 
       const farmInterval = setInterval(async () => {
         timeElapsed += 1;
@@ -98,34 +124,37 @@ export default function HomeUI({
           localAmount += 5;
           setFarmAmount(localAmount);
           
-          // Update points in database
+          // Update both points and farm progress
           try {
-            const res = await fetch('/api/increase-points', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ 
-                telegramId: user.telegramId, 
-                pointsToAdd: 5, 
-                buttonId: 'farm' 
+            const [pointsRes] = await Promise.all([
+              fetch('/api/increase-points', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                  telegramId: user.telegramId, 
+                  pointsToAdd: 5, 
+                  buttonId: 'farm' 
+                }),
               }),
-            });
-            const data = await res.json();
-            if (data.success) {
-              setPoints(data.points);
+              updateFarmProgress(localAmount)
+            ]);
+
+            const pointsData = await pointsRes.json();
+            if (pointsData.success) {
+              setTotalPoints(pointsData.points);
             }
           } catch (error) {
             console.error('Error updating points:', error);
           }
         }
 
-        setFarmTimer(duration - timeElapsed);
+        setFarmTimer(duration - (timeElapsed - (60 - duration)));
 
-        if (timeElapsed >= duration) {
+        if (timeElapsed >= 60) {
           clearInterval(farmInterval);
           setFarming(false);
           setFarmTimer(0);
           
-          // End farming session in database
           await fetch('/api/end-farming', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -152,7 +181,7 @@ export default function HomeUI({
           />
         </div>
         <p id="pixelDogsCount" className="pixel-dogs-count">
-          {points} PixelDogs
+          {totalPoints} PixelDogs
         </p>
         <p id="updateText" className="update-text fade fade-in">
           Exciting updates are on the way:)
