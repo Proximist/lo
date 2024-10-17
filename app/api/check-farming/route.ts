@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ 
                 farming: true,
                 farmStartTime: user.farmStartTime,
-                farmAmount: user.farmAmount
+                farmAmount: user.farmAmount || 0
             });
         }
 
