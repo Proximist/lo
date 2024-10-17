@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'; // Ensure React is imported
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { toggleUpdateText } from './utils'; // Import the function from utils.js
-import './HomeUI.css'; // Import your CSS file
+import { toggleUpdateText } from './utils';
+import './HomeUI.css';
 
 interface HomeUIProps {
   user: any;
@@ -32,14 +32,114 @@ export default function HomeUI({
   handleClaim2,
   handleClaim3,
 }: HomeUIProps) {
+  const [farming, setFarming] = useState(false);
+  const [farmAmount, setFarmAmount] = useState(0);
+  const [farmTimer, setFarmTimer] = useState(0);
+  const [points, setPoints] = useState(user.points);
+
   useEffect(() => {
-      // Append Font Awesome stylesheet
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
     document.head.appendChild(link);
-    toggleUpdateText(); // Call the function to toggle update text
+    toggleUpdateText();
   }, []);
+
+  useEffect(() => {
+    // Check if there's an active farming session on load
+    const checkFarmingStatus = async () => {
+      try {
+        const res = await fetch('/api/check-farming', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ telegramId: user.telegramId }),
+        });
+        const data = await res.json();
+        
+        if (data.farming) {
+          const elapsedTime = Math.floor((Date.now() - new Date(data.farmStartTime).getTime()) / 1000);
+          if (elapsedTime < 60) {
+            setFarming(true);
+            setFarmTimer(60 - elapsedTime);
+            setFarmAmount(data.farmAmount);
+            startFarming(60 - elapsedTime);
+          }
+        }
+      } catch (error) {
+        console.error('Error checking farming status:', error);
+      }
+    };
+    
+    checkFarmingStatus();
+  }, [user.telegramId]);
+
+  const startFarming = async (duration = 60) => {
+    if (farming) return;
+    
+    setFarming(true);
+    setFarmTimer(duration);
+    setFarmAmount(0);
+
+    try {
+      // Start farming session in database
+      await fetch('/api/start-farming', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ telegramId: user.telegramId }),
+      });
+
+      let localAmount = 0;
+      let timeElapsed = 0;
+
+      const farmInterval = setInterval(async () => {
+        timeElapsed += 1;
+        
+        if (timeElapsed % 10 === 0) {
+          localAmount += 5;
+          setFarmAmount(localAmount);
+          
+          // Update points in database
+          try {
+            const res = await fetch('/api/increase-points', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                telegramId: user.telegramId, 
+                pointsToAdd: 5, 
+                buttonId: 'farm' 
+              }),
+            });
+            const data = await res.json();
+            if (data.success) {
+              setPoints(data.points);
+            }
+          } catch (error) {
+            console.error('Error updating points:', error);
+          }
+        }
+
+        setFarmTimer(duration - timeElapsed);
+
+        if (timeElapsed >= duration) {
+          clearInterval(farmInterval);
+          setFarming(false);
+          setFarmTimer(0);
+          
+          // End farming session in database
+          await fetch('/api/end-farming', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ telegramId: user.telegramId }),
+          });
+        }
+      }, 1000);
+
+      return () => clearInterval(farmInterval);
+    } catch (error) {
+      console.error('Error during farming:', error);
+      setFarming(false);
+    }
+  };
 
   return (
     <div className="home-container">
@@ -52,11 +152,11 @@ export default function HomeUI({
           />
         </div>
         <p id="pixelDogsCount" className="pixel-dogs-count">
-          {user.points} PixelDogs
+          {points} PixelDogs
         </p>
-      <p id="updateText" className="update-text fade fade-in">
-        Exciting updates are on the way:)
-      </p>
+        <p id="updateText" className="update-text fade fade-in">
+          Exciting updates are on the way:)
+        </p>
         <div className="tasks-container">
           <button className="tasks-button">Daily Tasks..!</button>
           <div className="social-container">
@@ -106,7 +206,15 @@ export default function HomeUI({
         </div>
       </div>
       <div className="flex-grow"></div>
-      <button className="farm-button">Farm PixelDogs...</button>
+      <button 
+        className="farm-button"
+        onClick={() => !farming && startFarming()}
+        disabled={farming}
+      >
+        {farming 
+          ? `Farming... ${farmAmount} PD (${farmTimer}s)`
+          : 'Farm PixelDogs...'}
+      </button>
       <div className="footer-container">
         <Link href="/">
           <a className="flex flex-col items-center text-gray-800">
