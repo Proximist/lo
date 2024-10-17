@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'; // Ensure React is imported
+import React, { useEffect } from 'react'; // Ensure React is imported
 import Link from 'next/link';
 import { toggleUpdateText } from './utils'; // Import the function from utils.js
 import './HomeUI.css'; // Import your CSS file
@@ -16,8 +16,6 @@ interface HomeUIProps {
   handleClaim1: () => void;
   handleClaim2: () => void;
   handleClaim3: () => void;
-  handleStartFarming: () => void;
-  handleStopFarming: () => void;
 }
 
 export default function HomeUI({
@@ -33,48 +31,15 @@ export default function HomeUI({
   handleClaim1,
   handleClaim2,
   handleClaim3,
-  handleStartFarming,
-  handleStopFarming,
 }: HomeUIProps) {
-  const [isFarming, setIsFarming] = useState(false);
-  const [farmingTime, setFarmingTime] = useState(0);
-  const [farmedAmount, setFarmedAmount] = useState(0);
-
   useEffect(() => {
+      // Append Font Awesome stylesheet
     const link = document.createElement('link');
     link.rel = 'stylesheet';
     link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
     document.head.appendChild(link);
-    toggleUpdateText();
+    toggleUpdateText(); // Call the function to toggle update text
   }, []);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isFarming) {
-      interval = setInterval(() => {
-        setFarmingTime((prev) => {
-          if (prev >= 60) {
-            handleStopFarming();
-            return 0;
-          }
-          return prev + 1;
-        });
-        setFarmedAmount((prev) => prev + 0.5);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [isFarming]);
-
-  const handleFarmClick = () => {
-    if (isFarming) {
-      handleStopFarming();
-    } else {
-      handleStartFarming();
-    }
-    setIsFarming(!isFarming);
-    setFarmingTime(0);
-    setFarmedAmount(0);
-  };
 
   return (
     <div className="home-container">
@@ -141,14 +106,7 @@ export default function HomeUI({
         </div>
       </div>
       <div className="flex-grow"></div>
-      <button 
-        className="farm-button" 
-        onClick={handleFarmClick}
-      >
-        {isFarming 
-          ? `Farming... ${farmedAmount.toFixed(1)} PD (${60 - farmingTime}s left)` 
-          : 'Farm PixelDogs...'}
-      </button>
+      <button className="farm-button">Farm PixelDogs...</button>
       <div className="footer-container">
         <Link href="/">
           <a className="flex flex-col items-center text-gray-800">
