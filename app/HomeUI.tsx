@@ -59,9 +59,14 @@ export default function HomeUI({
         <p id="pixelDogsCount" className="pixel-dogs-count">
           {user.points} PixelDogs
         </p>
-      <p id="updateText" className="update-text fade fade-in">
-        Exciting updates are on the way:)
-      </p>
+        {notification && (
+          <div className="notification-banner">
+            {notification}
+          </div>
+        )}
+        <p id="updateText" className="update-text fade fade-in">
+          Exciting updates are on the way:)
+        </p>
         <div className="tasks-container">
           <button className="tasks-button">Daily Tasks..!</button>
           <div className="social-container">
@@ -112,13 +117,15 @@ export default function HomeUI({
       </div>
       <div className="flex-grow"></div>
       <button 
-        className={`farm-button ${isFarming ? 'farming' : ''}`} 
+        className={`farm-button ${isFarming ? 'farming' : ''} ${farmAmount >= 60 ? 'completed' : ''}`}
         onClick={handleFarmClick}
-        disabled={isFarming}
+        disabled={isFarming && farmAmount >= 60}
       >
         {isFarming 
-          ? `Farming PixelDogs (${farmAmount}/60)` 
-          : 'Farm PixelDogs...'}
+          ? `Farming... (${farmAmount}/60 PD)` 
+          : farmAmount >= 60 
+            ? 'Farm Complete!' 
+            : 'Farm PixelDogs...'}
       </button>
       <div className="footer-container">
         <Link href="/">
