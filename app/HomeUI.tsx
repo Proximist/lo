@@ -17,12 +17,6 @@ interface HomeUIProps {
   handleClaim2: () => void;
   handleClaim3: () => void;
   handleFarmClick: () => void;
-  handleClaimFarm: () => void;
-  farmingStatus: {
-    isFarming: boolean;
-    pointsAccumulated: number;
-    canClaim: boolean;
-  };
 }
 
 export default function HomeUI({
@@ -39,10 +33,9 @@ export default function HomeUI({
   handleClaim2,
   handleClaim3,
   handleFarmClick,
-  handleClaimFarm,
-  farmingStatus,
 }: HomeUIProps) {
-  const [farmingText, setFarmingText] = useState<string>('Farm PixelDogs');
+  const [farmingStatus, setFarmingStatus] = useState<string>('Farm PixelDogs...');
+  const [currentFarmPoints, setCurrentFarmPoints] = useState<number>(0);
 
   useEffect(() => {
     const link = document.createElement('link');
@@ -53,24 +46,29 @@ export default function HomeUI({
   }, []);
 
   useEffect(() => {
-    if (farmingStatus.isFarming) {
-      if (farmingStatus.canClaim) {
-        setFarmingText(`Claim ${farmingStatus.pointsAccumulated} PD`);
-      } else {
-        setFarmingText(`Farming (${farmingStatus.pointsAccumulated} PD)...`);
-      }
+    let interval: NodeJS.Timeout;
+    
+    if (user.isFarming) {
+      setFarmingStatus('Farming...');
+      interval = setInterval(() => {
+        const now = new Date();
+        const lastFarm = new Date(user.lastFarmTime);
+        const elapsed = Math.floor((now.getTime() - lastFarm.getTime()) / 1000);
+        const points = Math.min(Math.floor(elapsed / 2), 60 - (user.farmingPoints || 0));
+        setCurrentFarmPoints(points);
+        setFarmingStatus(`Farming (${points} PD)...`);
+      }, 1000);
     } else {
-      setFarmingText('Farm PixelDogs');
+      setFarmingStatus('Farm PixelDogs...');
+      setCurrentFarmPoints(0);
     }
-  }, [farmingStatus]);
 
-  const handleFarmButtonClick = () => {
-    if (farmingStatus.canClaim) {
-      handleClaimFarm();
-    } else if (!farmingStatus.isFarming) {
-      handleFarmClick();
-    }
-  };
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [user.isFarming, user.lastFarmTime, user.farmingPoints]);
 
   return (
     <div className="home-container">
@@ -139,19 +137,11 @@ export default function HomeUI({
       <div className="flex-grow"></div>
       <button 
         className="farm-button"
-        onClick={handleFarmButtonClick}
-        disabled={isLoading || (farmingStatus.isFarming && !farmingStatus.canClaim)}
+        onClick={handleFarmClick}
+        disabled={isLoading}
       >
-        {farmingText}
+        {farmingStatus}
       </button>
-      {farmingStatus.isFarming && !farmingStatus.canClaim && (
-        <div className="farming-progress">
-          <div 
-            className="progress-bar" 
-            style={{width: `${(farmingStatus.pointsAccumulated / 1800) * 100}%`}}
-          ></div>
-        </div>
-      )}
       <div className="footer-container">
         <Link href="/">
           <a className="flex flex-col items-center text-gray-800">
