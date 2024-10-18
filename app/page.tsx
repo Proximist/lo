@@ -21,7 +21,11 @@ export default function Home() {
   const [buttonStage2, setButtonStage2] = useState<'check' | 'claim' | 'claimed'>('check')
   const [buttonStage3, setButtonStage3] = useState<'check' | 'claim' | 'claimed'>('check')
   const [isLoading, setIsLoading] = useState(false)
-  const [farmInterval, setFarmInterval] = useState<NodeJS.Timeout | null>(null)
+  const [farmingStatus, setFarmingStatus] = useState({
+    isFarming: false,
+    pointsAccumulated: 0,
+    canClaim: false
+  })
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
@@ -48,6 +52,9 @@ export default function Home() {
               setButtonStage1(data.user.claimedButton1 ? 'claimed' : 'check')
               setButtonStage2(data.user.claimedButton2 ? 'claimed' : 'check')
               setButtonStage3(data.user.claimedButton3 ? 'claimed' : 'check')
+              if (data.user.isFarming) {
+                checkFarmingStatus(data.user.telegramId)
+              }
             }
           })
           .catch(() => {
@@ -60,6 +67,40 @@ export default function Home() {
       setError('This app should be opened in Telegram')
     }
   }, [])
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+    if (farmingStatus.isFarming && !farmingStatus.canClaim) {
+      interval = setInterval(() => {
+        checkFarmingStatus(user.telegramId);
+      }, 60000); // Check every minute
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [farmingStatus, user]);
+
+  const checkFarmingStatus = async (telegramId: number) => {
+    try {
+      const res = await fetch('/api/farm-points', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ telegramId, action: 'check' }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setFarmingStatus({
+          isFarming: true,
+          pointsAccumulated: data.pointsAccumulated,
+          canClaim: data.canClaim
+        });
+      }
+    } catch (error) {
+      console.error('Error checking farming status:', error);
+    }
+  };
 
   const handleIncreasePoints = async (pointsToAdd: number, buttonId: string) => {
     if (!user) return
@@ -88,46 +129,52 @@ export default function Home() {
   const handleFarmClick = async () => {
     if (!user) return;
 
-    if (!user.isFarming) {
-      try {
-        const res = await fetch('/api/farm-points', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ telegramId: user.telegramId, action: 'start' }),
+    try {
+      const res = await fetch('/api/farm-points', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ telegramId: user.telegramId, action: 'start' }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUser({ ...user, isFarming: true });
+        setFarmingStatus({
+          isFarming: true,
+          pointsAccumulated: 0,
+          canClaim: false
         });
-        const data = await res.json();
-        if (data.success) {
-          setUser({ ...user, isFarming: true, lastFarmTime: new Date() });
-          
-          // Set up interval to collect points
-          const interval = setInterval(async () => {
-            const collectRes = await fetch('/api/farm-points', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ telegramId: user.telegramId, action: 'collect' }),
-            });
-            const collectData = await collectRes.json();
-            
-            if (collectData.success) {
-              setUser(collectData.user);
-              if (!collectData.user.isFarming) {
-                if (farmInterval) {
-                  clearInterval(farmInterval);
-                  setFarmInterval(null);
-                }
-              }
-            }
-          }, 2000);
-          
-          setFarmInterval(interval);
-        }
-      } catch (error) {
-        console.error('Error starting farming:', error);
       }
+    } catch (error) {
+      console.error('Error starting farming:', error);
+    }
+  };
+
+  const handleClaimFarm = async () => {
+    if (!user) return;
+
+    try {
+      const res = await fetch('/api/farm-points', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ telegramId: user.telegramId, action: 'collect' }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUser({ ...data.user, isFarming: false });
+        setFarmingStatus({
+          isFarming: false,
+          pointsAccumulated: 0,
+          canClaim: false
+        });
+        setNotification(`Farming rewards claimed! (+${data.pointsAdded} PD)`);
+        setTimeout(() => setNotification(''), 3000);
+      }
+    } catch (error) {
+      console.error('Error claiming farming rewards:', error);
     }
   };
 
@@ -177,15 +224,6 @@ export default function Home() {
     }
   }
 
-  // Clean up interval on unmount
-  useEffect(() => {
-    return () => {
-      if (farmInterval) {
-        clearInterval(farmInterval);
-      }
-    };
-  }, [farmInterval]);
-
   if (error) {
     return <div className="container mx-auto p-4 text-red-500">{error}</div>
   }
@@ -207,6 +245,8 @@ export default function Home() {
       handleClaim2={handleClaim2}
       handleClaim3={handleClaim3}
       handleFarmClick={handleFarmClick}
+      handleClaimFarm={handleClaimFarm}
+      farmingStatus={farmingStatus}
     />
   )
-}
+          }
