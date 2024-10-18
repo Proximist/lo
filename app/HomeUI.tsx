@@ -53,11 +53,11 @@ export default function HomeUI({
       interval = setInterval(() => {
         const now = new Date();
         const lastFarm = new Date(user.lastFarmTime);
-        const elapsed = Math.floor((now.getTime() - lastFarm.getTime()) / 1000);
-        const points = Math.min(Math.floor(elapsed / 5), 60 - (user.farmingPoints || 0));
+        const elapsed = Math.floor((now.getTime() - lastFarm.getTime()) / 3000);
+        const points = Math.min(Math.floor(elapsed / 2), 60 - (user.farmingPoints || 0));
         setCurrentFarmPoints(points);
         setFarmingStatus(`Farming (${points} PD)...`);
-      }, 1000);
+      }, 3000);
     } else {
       setFarmingStatus('Farm PixelDogs...');
       setCurrentFarmPoints(0);
