@@ -122,7 +122,7 @@ export default function Home() {
           console.error('Error while farming:', error)
         }
       }
-    }, 1000)
+    }, 1000);
 
     return () => clearInterval(interval)
   }
