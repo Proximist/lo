@@ -15,13 +15,13 @@ declare global {
 // Define a type for the user object
 interface User {
   telegramId: string;
-  points: int;
+  points: number;
   isFarming: boolean;
-  lastFarmTime?: DateTime;
+  lastFarmTime?: Date;
   claimedButton1: boolean;
   claimedButton2: boolean;
   claimedButton3: boolean;
-  farmingPoints?: int;
+  farmingPoints?: number;
 }
 
 export default function Home() {
