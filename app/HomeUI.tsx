@@ -54,7 +54,7 @@ export default function HomeUI({
         const now = new Date();
         const lastFarm = new Date(user.lastFarmTime);
         const elapsed = Math.floor((now.getTime() - lastFarm.getTime()) / 1000);
-        const points = Math.min(Math.floor(elapsed / 2), 30 - (user.farmingPoints || 0));
+        const points = Math.min(Math.floor(elapsed / 2), 60 - (user.farmingPoints || 0));
         setCurrentFarmPoints(points);
         setFarmingStatus(`Farming (${points} PD)...`);
       }, 1000);
