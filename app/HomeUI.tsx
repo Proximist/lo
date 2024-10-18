@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { toggleUpdateText } from './utils';
 import './HomeUI.css';
@@ -16,8 +16,6 @@ interface HomeUIProps {
   handleClaim1: () => void;
   handleClaim2: () => void;
   handleClaim3: () => void;
-  isFarming: boolean;
-  farmAmount: number;
   handleFarmClick: () => void;
 }
 
@@ -34,10 +32,11 @@ export default function HomeUI({
   handleClaim1,
   handleClaim2,
   handleClaim3,
-  isFarming,
-  farmAmount,
   handleFarmClick,
 }: HomeUIProps) {
+  const [farmingStatus, setFarmingStatus] = useState<string>('Farm PixelDogs...');
+  const [currentFarmPoints, setCurrentFarmPoints] = useState<number>(0);
+
   useEffect(() => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -45,6 +44,31 @@ export default function HomeUI({
     document.head.appendChild(link);
     toggleUpdateText();
   }, []);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (user.isFarming) {
+      setFarmingStatus('Farming...');
+      interval = setInterval(() => {
+        const now = new Date();
+        const lastFarm = new Date(user.lastFarmTime);
+        const elapsed = Math.floor((now.getTime() - lastFarm.getTime()) / 1000);
+        const points = Math.min(Math.floor(elapsed / 2), 60 - (user.farmingPoints || 0));
+        setCurrentFarmPoints(points);
+        setFarmingStatus(`Farming (${points} PD)...`);
+      }, 1000);
+    } else {
+      setFarmingStatus('Farm PixelDogs...');
+      setCurrentFarmPoints(0);
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [user.isFarming, user.lastFarmTime, user.farmingPoints]);
 
   return (
     <div className="home-container">
@@ -59,11 +83,6 @@ export default function HomeUI({
         <p id="pixelDogsCount" className="pixel-dogs-count">
           {user.points} PixelDogs
         </p>
-        {notification && (
-          <div className="notification-banner">
-            {notification}
-          </div>
-        )}
         <p id="updateText" className="update-text fade fade-in">
           Exciting updates are on the way:)
         </p>
@@ -117,15 +136,11 @@ export default function HomeUI({
       </div>
       <div className="flex-grow"></div>
       <button 
-        className={`farm-button ${isFarming ? 'farming' : ''} ${farmAmount >= 60 ? 'completed' : ''}`}
+        className="farm-button"
         onClick={handleFarmClick}
-        disabled={isFarming && farmAmount >= 60}
+        disabled={isLoading}
       >
-        {isFarming 
-          ? `Farming... (${farmAmount}/60 PD)` 
-          : farmAmount >= 60 
-            ? 'Farm Complete!' 
-            : 'Farm PixelDogs...'}
+        {farmingStatus}
       </button>
       <div className="footer-container">
         <Link href="/">
