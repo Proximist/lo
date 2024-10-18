@@ -31,41 +31,37 @@ export async function POST(req: NextRequest) {
         }
 
         if (action === 'collect') {
-    const currentTime = new Date();
-    const lastFarmTime = user.lastFarmTime;
-    
-    if (!lastFarmTime || !user.isFarming) {
-        return NextResponse.json({ error: 'Not farming' }, { status: 400 });
-    }
+            const currentTime = new Date();
+            const lastFarmTime = user.lastFarmTime;
+            
+            if (!lastFarmTime || !user.isFarming) {
+                return NextResponse.json({ error: 'Not farming' }, { status: 400 });
+            }
 
-    const timeElapsed = Math.floor((currentTime.getTime() - lastFarmTime.getTime()) / 1000);
-    const pointsAccumulated = Math.min(Math.floor(timeElapsed / 2), 30); // Changed from 60 to 30
+            const timeElapsed = Math.floor((currentTime.getTime() - lastFarmTime.getTime()) / 1000);
+            const pointsToAdd = Math.min(Math.floor(timeElapsed / 2), 30 - (user.farmingPoints || 0));
 
-    if (pointsAccumulated < 30) { // Changed condition to wait for 30 points
-        return NextResponse.json({ 
-            success: true, 
-            pointsAccumulated,
-            user: { ...user, farmingPoints: pointsAccumulated }
-        });
-    }
+            if (pointsToAdd <= 0) {
+                return NextResponse.json({ error: 'No points to collect' }, { status: 400 });
+            }
 
-    const updatedUser = await prisma.user.update({
-        where: { telegramId },
-        data: {
-            points: { increment: 30 }, // Always add 30 points when complete
-            fpoints: { increment: 30 },
-            farmingPoints: 0,
-            lastFarmTime: currentTime,
-            isFarming: false
+            const updatedUser = await prisma.user.update({
+                where: { telegramId },
+                data: {
+                    points: { increment: pointsToAdd },
+                    fpoints: { increment: pointsToAdd },
+                    farmingPoints: { increment: pointsToAdd },
+                    lastFarmTime: currentTime,
+                    isFarming: user.farmingPoints + pointsToAdd < 30
+                }
+            });
+
+            return NextResponse.json({ 
+                success: true, 
+                pointsAdded: pointsToAdd, 
+                user: updatedUser 
+            });
         }
-    });
-
-    return NextResponse.json({ 
-        success: true, 
-        pointsAdded: 30,
-        user: updatedUser 
-    });
-}
 
         return NextResponse.json({ error: 'Invalid action' }, { status: 400 });
     } catch (error) {
