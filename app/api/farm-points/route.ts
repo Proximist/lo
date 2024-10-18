@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
         if (action === 'collect') {
             const currentTime = new Date();
             const lastFarmTime = user.lastFarmTime;
-            
+
             if (!lastFarmTime || !user.isFarming) {
                 return NextResponse.json({ error: 'Not farming' }, { status: 400 });
             }
@@ -52,14 +52,14 @@ export async function POST(req: NextRequest) {
                     fpoints: { increment: pointsToAdd },
                     farmingPoints: { increment: pointsToAdd },
                     lastFarmTime: currentTime,
-                    isFarming: user.farmingPoints + pointsToAdd < 30
+                    isFarming: user.farmingPoints + pointsToAdd < 30 // Continue farming if under limit
                 }
             });
 
-            return NextResponse.json({ 
-                success: true, 
-                pointsAdded: pointsToAdd, 
-                user: updatedUser 
+            return NextResponse.json({
+                success: true,
+                pointsAdded: pointsToAdd,
+                user: updatedUser
             });
         }
 
