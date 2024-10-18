@@ -1,73 +1,85 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import { WebApp } from '@twa-dev/types'
-import HomeUI from './HomeUI'
+import { useEffect, useState } from 'react';
+import { WebApp } from '@twa-dev/types';
+import HomeUI from './HomeUI';
 
 declare global {
   interface Window {
     Telegram?: {
-      WebApp: WebApp
-    }
+      WebApp: WebApp;
+    };
   }
 }
 
+// Define a type for the user object
+interface User {
+  telegramId: int;
+  points: int;
+  isFarming: boolean;
+  lastFarmTime?: DateTime;
+  claimedButton1: boolean;
+  claimedButton2: boolean;
+  claimedButton3: boolean;
+  farmingPoints?: int;
+}
+
 export default function Home() {
-  const [user, setUser] = useState<any>(null)
-  const [inviterInfo, setInviterInfo] = useState<any>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [notification, setNotification] = useState('')
-  const [buttonStage1, setButtonStage1] = useState<'check' | 'claim' | 'claimed'>('check')
-  const [buttonStage2, setButtonStage2] = useState<'check' | 'claim' | 'claimed'>('check')
-  const [buttonStage3, setButtonStage3] = useState<'check' | 'claim' | 'claimed'>('check')
-  const [isLoading, setIsLoading] = useState(false)
-  const [farmInterval, setFarmInterval] = useState<NodeJS.Timeout | null>(null)
+  const [user, setUser] = useState<User | null>(null);
+  const [inviterInfo, setInviterInfo] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [notification, setNotification] = useState('');
+  const [buttonStage1, setButtonStage1] = useState<'check' | 'claim' | 'claimed'>('check');
+  const [buttonStage2, setButtonStage2] = useState<'check' | 'claim' | 'claimed'>('check');
+  const [buttonStage3, setButtonStage3] = useState<'check' | 'claim' | 'claimed'>('check');
+  const [isLoading, setIsLoading] = useState(false);
+  const [farmInterval, setFarmInterval] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
-        const tg = window.Telegram.WebApp;
-        tg.ready();
+      const tg = window.Telegram.WebApp;
+      tg.ready();
 
-        const initDataUnsafe = tg.initDataUnsafe || {};
+      const initDataUnsafe = tg.initDataUnsafe || {};
 
-        if (initDataUnsafe.user) {
-            fetch('/api/user', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ ...initDataUnsafe.user, start_param: initDataUnsafe.start_param || null })
-            })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.error) {
-                    setError(data.error);
-                } else {
-                    setUser(data.user);
-                    setInviterInfo(data.inviterInfo);
-                    setButtonStage1(data.user.claimedButton1 ? 'claimed' : 'check');
-                    setButtonStage2(data.user.claimedButton2 ? 'claimed' : 'check');
-                    setButtonStage3(data.user.claimedButton3 ? 'claimed' : 'check');
+      if (initDataUnsafe.user) {
+        fetch('/api/user', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ...initDataUnsafe.user, start_param: initDataUnsafe.start_param || null }),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.error) {
+              setError(data.error);
+            } else {
+              setUser(data.user);
+              setInviterInfo(data.inviterInfo);
+              setButtonStage1(data.user.claimedButton1 ? 'claimed' : 'check');
+              setButtonStage2(data.user.claimedButton2 ? 'claimed' : 'check');
+              setButtonStage3(data.user.claimedButton3 ? 'claimed' : 'check');
 
-                    // If the user is farming, set up the interval to collect points
-                    if (data.user.isFarming) {
-                        startFarmingInterval(data.user);
-                    }
-                }
-            })
-            .catch(() => {
-                setError('Failed to fetch user data');
-            });
-        } else {
-            setError('No user data available');
-        }
+              // If the user is farming, set up the interval to collect points
+              if (data.user.isFarming) {
+                startFarmingInterval(data.user);
+              }
+            }
+          })
+          .catch(() => {
+            setError('Failed to fetch user data');
+          });
+      } else {
+        setError('No user data available');
+      }
     } else {
-        setError('This app should be opened in Telegram');
+      setError('This app should be opened in Telegram');
     }
-}, []);
+  }, []);
 
   const handleIncreasePoints = async (pointsToAdd: number, buttonId: string) => {
-    if (!user) return
+    if (!user) return;
 
     try {
       const res = await fetch('/api/increase-points', {
@@ -76,42 +88,42 @@ export default function Home() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ telegramId: user.telegramId, pointsToAdd, buttonId }),
-      })
-      const data = await res.json()
+      });
+      const data = await res.json();
       if (data.success) {
-        setUser({ ...user, points: data.points })
-        setNotification(`Points increased successfully! (+${pointsToAdd})`)
-        setTimeout(() => setNotification(''), 3000)
+        setUser({ ...user, points: data.points });
+        setNotification(`Points increased successfully! (+${pointsToAdd})`);
+        setTimeout(() => setNotification(''), 3000);
       } else {
-        setError('Failed to increase points')
+        setError('Failed to increase points');
       }
     } catch {
-      setError('An error occurred while increasing points')
+      setError('An error occurred while increasing points');
     }
-  }
+  };
 
-  const startFarmingInterval = (userData) => {
+  // Explicitly type userData parameter as User
+  const startFarmingInterval = (userData: User) => {
     const interval = setInterval(async () => {
-        const collectRes = await fetch('/api/farm-points', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ telegramId: userData.telegramId, action: 'collect' }),
-        });
-        const collectData = await collectRes.json();
+      const collectRes = await fetch('/api/farm-points', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ telegramId: userData.telegramId, action: 'collect' }),
+      });
+      const collectData = await collectRes.json();
 
-        if (collectData.success) {
-            setUser(collectData.user);
-            if (!collectData.user.isFarming) {
-                clearInterval(interval);
-            }
+      if (collectData.success) {
+        setUser(collectData.user);
+        if (!collectData.user.isFarming) {
+          clearInterval(interval);
         }
+      }
     }, 30000); // Collect points every 30 seconds
 
     setFarmInterval(interval);
-};
-
+  };
 
   const handleFarmClick = async () => {
     if (!user) return;
@@ -128,7 +140,7 @@ export default function Home() {
         const data = await res.json();
         if (data.success) {
           setUser({ ...user, isFarming: true, lastFarmTime: new Date() });
-          
+
           // Set up interval to collect points
           const interval = setInterval(async () => {
             const collectRes = await fetch('/api/farm-points', {
@@ -139,7 +151,7 @@ export default function Home() {
               body: JSON.stringify({ telegramId: user.telegramId, action: 'collect' }),
             });
             const collectData = await collectRes.json();
-            
+
             if (collectData.success) {
               setUser(collectData.user);
               if (!collectData.user.isFarming) {
@@ -150,7 +162,7 @@ export default function Home() {
               }
             }
           }, 60000);
-          
+
           setFarmInterval(interval);
         }
       } catch (error) {
@@ -161,49 +173,49 @@ export default function Home() {
 
   const handleButtonClick1 = () => {
     if (buttonStage1 === 'check') {
-      window.open('https://youtu.be/xvFZjo5PgG0', '_blank')
-      setButtonStage1('claim')
+      window.open('https://youtu.be/xvFZjo5PgG0', '_blank');
+      setButtonStage1('claim');
     }
-  }
+  };
 
   const handleButtonClick2 = () => {
     if (buttonStage2 === 'check') {
-      window.open('https://twitter.com', '_blank')
-      setButtonStage2('claim')
+      window.open('https://twitter.com', '_blank');
+      setButtonStage2('claim');
     }
-  }
+  };
 
   const handleButtonClick3 = () => {
     if (buttonStage3 === 'check') {
-      window.open('https://telegram.org', '_blank')
-      setButtonStage3('claim')
+      window.open('https://telegram.org', '_blank');
+      setButtonStage3('claim');
     }
-  }
+  };
 
   const handleClaim1 = () => {
     if (buttonStage1 === 'claim') {
-      setIsLoading(true)
-      handleIncreasePoints(5, 'button1')
+      setIsLoading(true);
+      handleIncreasePoints(5, 'button1');
       setTimeout(() => {
-        setButtonStage1('claimed')
-        setIsLoading(false)
-      }, 3000)
+        setButtonStage1('claimed');
+        setIsLoading(false);
+      }, 3000);
     }
-  }
+  };
 
   const handleClaim2 = () => {
     if (buttonStage2 === 'claim') {
-      handleIncreasePoints(3, 'button2')
-      setButtonStage2('claimed')
+      handleIncreasePoints(3, 'button2');
+      setButtonStage2('claimed');
     }
-  }
+  };
 
   const handleClaim3 = () => {
     if (buttonStage3 === 'claim') {
-      handleIncreasePoints(9, 'button3')
-      setButtonStage3('claimed')
+      handleIncreasePoints(9, 'button3');
+      setButtonStage3('claimed');
     }
-  }
+  };
 
   // Clean up interval on unmount
   useEffect(() => {
@@ -215,13 +227,13 @@ export default function Home() {
   }, [farmInterval]);
 
   if (error) {
-    return <div className="container mx-auto p-4 text-red-500">{error}</div>
+    return <div className="container mx-auto p-4 text-red-500">{error}</div>;
   }
 
-  if (!user) return <div className="container mx-auto p-4">Loading...</div>
+  if (!user) return <div className="container mx-auto p-4">Loading...</div>;
 
   return (
-    <HomeUI 
+    <HomeUI
       user={user}
       buttonStage1={buttonStage1}
       buttonStage2={buttonStage2}
@@ -236,5 +248,5 @@ export default function Home() {
       handleClaim3={handleClaim3}
       handleFarmClick={handleFarmClick}
     />
-  )
+  );
 }
