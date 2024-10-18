@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
                     fpoints: { increment: pointsToAdd },
                     farmingPoints: { increment: pointsToAdd },
                     lastFarmTime: currentTime,
-                    isFarming: user.farmingPoints + pointsToAdd < 30 // Continue farming if under limit
+                    isFarming: user.farmingPoints + pointsToAdd < 30
                 }
             });
 
