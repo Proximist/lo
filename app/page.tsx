@@ -25,65 +25,46 @@ export default function Home() {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
-      const tg = window.Telegram.WebApp
-      tg.ready()
+        const tg = window.Telegram.WebApp;
+        tg.ready();
 
-      const initDataUnsafe = tg.initDataUnsafe || {}
+        const initDataUnsafe = tg.initDataUnsafe || {};
 
-      if (initDataUnsafe.user) {
-        fetch('/api/user', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ ...initDataUnsafe.user, start_param: initDataUnsafe.start_param || null })
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            if (data.error) {
-              setError(data.error)
-            } else {
-              setUser(data.user)
-              setInviterInfo(data.inviterInfo)
-              setButtonStage1(data.user.claimedButton1 ? 'claimed' : 'check')
-              setButtonStage2(data.user.claimedButton2 ? 'claimed' : 'check')
-              setButtonStage3(data.user.claimedButton3 ? 'claimed' : 'check')
+        if (initDataUnsafe.user) {
+            fetch('/api/user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ...initDataUnsafe.user, start_param: initDataUnsafe.start_param || null })
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.error) {
+                    setError(data.error);
+                } else {
+                    setUser(data.user);
+                    setInviterInfo(data.inviterInfo);
+                    setButtonStage1(data.user.claimedButton1 ? 'claimed' : 'check');
+                    setButtonStage2(data.user.claimedButton2 ? 'claimed' : 'check');
+                    setButtonStage3(data.user.claimedButton3 ? 'claimed' : 'check');
 
-              // Add this new block to resume farming if it was in progress
-              if (data.user.isFarming) {
-                const interval = setInterval(async () => {
-                  const collectRes = await fetch('/api/farm-points', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ telegramId: data.user.telegramId, action: 'collect' }),
-                  });
-                  const collectData = await collectRes.json();
-                  
-                  if (collectData.success) {
-                    setUser(collectData.user);
-                    if (!collectData.user.isFarming) {
-                      clearInterval(interval);
-                      setFarmInterval(null);
+                    // If the user is farming, set up the interval to collect points
+                    if (data.user.isFarming) {
+                        startFarmingInterval(data.user);
                     }
-                  }
-                }, 2000);
-                
-                setFarmInterval(interval);
-              }
-            }
-          })
-          .catch(() => {
-            setError('Failed to fetch user data')
-          })
-      } else {
-        setError('No user data available')
-      }
+                }
+            })
+            .catch(() => {
+                setError('Failed to fetch user data');
+            });
+        } else {
+            setError('No user data available');
+        }
     } else {
-      setError('This app should be opened in Telegram')
+        setError('This app should be opened in Telegram');
     }
-  }, [])
+}, []);
 
   const handleIncreasePoints = async (pointsToAdd: number, buttonId: string) => {
     if (!user) return
@@ -108,6 +89,29 @@ export default function Home() {
       setError('An error occurred while increasing points')
     }
   }
+
+  const startFarmingInterval = (userData) => {
+    const interval = setInterval(async () => {
+        const collectRes = await fetch('/api/farm-points', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ telegramId: userData.telegramId, action: 'collect' }),
+        });
+        const collectData = await collectRes.json();
+
+        if (collectData.success) {
+            setUser(collectData.user);
+            if (!collectData.user.isFarming) {
+                clearInterval(interval);
+            }
+        }
+    }, 30000); // Collect points every 30 seconds
+
+    setFarmInterval(interval);
+};
+
 
   const handleFarmClick = async () => {
     if (!user) return;
