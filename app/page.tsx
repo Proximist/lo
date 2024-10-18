@@ -50,27 +50,28 @@ export default function Home() {
               setButtonStage3(data.user.claimedButton3 ? 'claimed' : 'check')
 
               // Add this new block to resume farming if it was in progress
-    if (data.user.isFarming) {
-      const interval = setInterval(async () => {
-        const collectRes = await fetch('/api/farm-points', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ telegramId: data.user.telegramId, action: 'collect' }),
-        });
-        const collectData = await collectRes.json();
-        
-        if (collectData.success) {
-          setUser(collectData.user);
-          if (!collectData.user.isFarming) {
-            clearInterval(interval);
-            setFarmInterval(null);
-          }
-        }
-      }, 2000);
-      
-      setFarmInterval(interval);
+              if (data.user.isFarming) {
+                const interval = setInterval(async () => {
+                  const collectRes = await fetch('/api/farm-points', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ telegramId: data.user.telegramId, action: 'collect' }),
+                  });
+                  const collectData = await collectRes.json();
+                  
+                  if (collectData.success) {
+                    setUser(collectData.user);
+                    if (!collectData.user.isFarming) {
+                      clearInterval(interval);
+                      setFarmInterval(null);
+                    }
+                  }
+                }, 2000);
+                
+                setFarmInterval(interval);
+              }
             }
           })
           .catch(() => {
