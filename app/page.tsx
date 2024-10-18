@@ -12,22 +12,8 @@ declare global {
   }
 }
 
-interface User {
-  telegramId: number;
-  username?: string;
-  firstName?: string;
-  lastName?: string;
-  points: number;
-  farmPoints: number;
-  claimedButton1: boolean;
-  claimedButton2: boolean;
-  claimedButton3: boolean;
-  farmAmount: number;
-  farmStartTime?: Date;
-}
-
 export default function Home() {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<any>(null)
   const [inviterInfo, setInviterInfo] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
   const [notification, setNotification] = useState('')
@@ -35,8 +21,7 @@ export default function Home() {
   const [buttonStage2, setButtonStage2] = useState<'check' | 'claim' | 'claimed'>('check')
   const [buttonStage3, setButtonStage3] = useState<'check' | 'claim' | 'claimed'>('check')
   const [isLoading, setIsLoading] = useState(false)
-  const [isFarming, setIsFarming] = useState(false)
-  const [farmAmount, setFarmAmount] = useState(0)
+  const [farmInterval, setFarmInterval] = useState<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
@@ -54,7 +39,7 @@ export default function Home() {
           body: JSON.stringify({ ...initDataUnsafe.user, start_param: initDataUnsafe.start_param || null })
         })
           .then((res) => res.json())
-          .then((data: { error?: string; user: User; inviterInfo: any }) => {
+          .then((data) => {
             if (data.error) {
               setError(data.error)
             } else {
@@ -63,11 +48,6 @@ export default function Home() {
               setButtonStage1(data.user.claimedButton1 ? 'claimed' : 'check')
               setButtonStage2(data.user.claimedButton2 ? 'claimed' : 'check')
               setButtonStage3(data.user.claimedButton3 ? 'claimed' : 'check')
-              setFarmAmount(data.user.farmAmount)
-              setIsFarming(!!data.user.farmStartTime)
-              if (data.user.farmStartTime) {
-                startFarming(new Date(data.user.farmStartTime), data.user.farmAmount)
-              }
             }
           })
           .catch(() => {
@@ -92,9 +72,9 @@ export default function Home() {
         },
         body: JSON.stringify({ telegramId: user.telegramId, pointsToAdd, buttonId }),
       })
-      const data: { success: boolean; points: number } = await res.json()
+      const data = await res.json()
       if (data.success) {
-        setUser(prev => prev ? { ...prev, points: data.points } : null)
+        setUser({ ...user, points: data.points })
         setNotification(`Points increased successfully! (+${pointsToAdd})`)
         setTimeout(() => setNotification(''), 3000)
       } else {
@@ -105,63 +85,51 @@ export default function Home() {
     }
   }
 
-  const startFarming = (startTime: Date, initialFarmAmount: number) => {
-    let localFarmAmount = initialFarmAmount;
-    const interval = setInterval(async () => {
-      const now = new Date()
-      const elapsedSeconds = Math.floor((now.getTime() - startTime.getTime()) / 1000)
-      const expectedFarmAmount = Math.min(Math.floor(elapsedSeconds / 2) * 1, 60) // 1 PD per 2 seconds, max 60
-      const pointsToAdd = expectedFarmAmount - localFarmAmount
-
-      if (pointsToAdd > 0) {
-        try {
-          const res = await fetch('/api/farm', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ telegramId: user?.telegramId, pointsToAdd }),
-          })
-          const data: { success: boolean; points: number; farmPoints: number; farmAmount: number; isFarming: boolean } = await res.json()
-          if (data.success) {
-            setUser(prev => prev ? { ...prev, points: data.points, farmPoints: data.farmPoints } : null)
-            setFarmAmount(data.farmAmount)
-            setIsFarming(data.isFarming)
-            localFarmAmount = data.farmAmount
-            if (!data.isFarming) {
-              clearInterval(interval)
-            }
-          }
-        } catch (error) {
-          console.error('Error while farming:', error)
-        }
-      }
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }
-
   const handleFarmClick = async () => {
-    if (isFarming) return
+    if (!user) return;
 
-    try {
-      const res = await fetch('/api/start-farm', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ telegramId: user?.telegramId }),
-      })
-      const data: { success: boolean; farmStartTime: string } = await res.json()
-      if (data.success) {
-        setIsFarming(true)
-        setFarmAmount(0)
-        startFarming(new Date(data.farmStartTime), 0)
+    if (!user.isFarming) {
+      try {
+        const res = await fetch('/api/farm-points', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ telegramId: user.telegramId, action: 'start' }),
+        });
+        const data = await res.json();
+        if (data.success) {
+          setUser({ ...user, isFarming: true, lastFarmTime: new Date() });
+          
+          // Set up interval to collect points
+          const interval = setInterval(async () => {
+            const collectRes = await fetch('/api/farm-points', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ telegramId: user.telegramId, action: 'collect' }),
+            });
+            const collectData = await collectRes.json();
+            
+            if (collectData.success) {
+              setUser(collectData.user);
+              if (!collectData.user.isFarming) {
+                if (farmInterval) {
+                  clearInterval(farmInterval);
+                  setFarmInterval(null);
+                }
+              }
+            }
+          }, 2000);
+          
+          setFarmInterval(interval);
+        }
+      } catch (error) {
+        console.error('Error starting farming:', error);
       }
-    } catch (error) {
-      console.error('Error starting farm:', error)
     }
-  }
+  };
 
   const handleButtonClick1 = () => {
     if (buttonStage1 === 'check') {
@@ -209,6 +177,15 @@ export default function Home() {
     }
   }
 
+  // Clean up interval on unmount
+  useEffect(() => {
+    return () => {
+      if (farmInterval) {
+        clearInterval(farmInterval);
+      }
+    };
+  }, [farmInterval]);
+
   if (error) {
     return <div className="container mx-auto p-4 text-red-500">{error}</div>
   }
@@ -229,8 +206,6 @@ export default function Home() {
       handleClaim1={handleClaim1}
       handleClaim2={handleClaim2}
       handleClaim3={handleClaim3}
-      isFarming={isFarming}
-      farmAmount={farmAmount}
       handleFarmClick={handleFarmClick}
     />
   )
