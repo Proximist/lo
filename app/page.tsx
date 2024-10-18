@@ -148,10 +148,86 @@ export default function Home() {
       console.error('Error starting farm:', error)
     }
   }
+    }, 1000)
 
-  // ... (rest of the code remains unchanged)
+    return () => clearInterval(interval)
+  }
 
-  return (
+  const handleFarmClick = async () => {
+    if (isFarming) return
+
+    try {
+      const res = await fetch('/api/start-farm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ telegramId: user.telegramId }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        setIsFarming(true)
+        setFarmAmount(0)
+        startFarming(new Date(data.farmStartTime))
+      }
+    } catch (error) {
+      console.error('Error starting farm:', error)
+    }
+  }
+
+  const handleButtonClick1 = () => {
+    if (buttonStage1 === 'check') {
+      window.open('https://youtu.be/xvFZjo5PgG0', '_blank')
+      setButtonStage1('claim')
+    }
+  }
+
+  const handleButtonClick2 = () => {
+    if (buttonStage2 === 'check') {
+      window.open('https://twitter.com', '_blank')
+      setButtonStage2('claim')
+    }
+  }
+
+  const handleButtonClick3 = () => {
+    if (buttonStage3 === 'check') {
+      window.open('https://telegram.org', '_blank')
+      setButtonStage3('claim')
+    }
+  }
+
+  const handleClaim1 = () => {
+    if (buttonStage1 === 'claim') {
+      setIsLoading(true)
+      handleIncreasePoints(5, 'button1')
+      setTimeout(() => {
+        setButtonStage1('claimed')
+        setIsLoading(false)
+      }, 3000)
+    }
+  }
+
+  const handleClaim2 = () => {
+    if (buttonStage2 === 'claim') {
+      handleIncreasePoints(3, 'button2')
+      setButtonStage2('claimed')
+    }
+  }
+
+  const handleClaim3 = () => {
+    if (buttonStage3 === 'claim') {
+      handleIncreasePoints(9, 'button3')
+      setButtonStage3('claimed')
+    }
+  }
+
+  if (error) {
+    return <div className="container mx-auto p-4 text-red-500">{error}</div>
+  }
+
+  if (!user) return <div className="container mx-auto p-4">Loading...</div>
+
+   return (
     <HomeUI 
       user={user}
       buttonStage1={buttonStage1}
