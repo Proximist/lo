@@ -14,7 +14,7 @@ declare global {
 
 // Define a type for the user object
 interface User {
-  telegramId: int;
+  telegramId: string;
   points: int;
   isFarming: boolean;
   lastFarmTime?: DateTime;
