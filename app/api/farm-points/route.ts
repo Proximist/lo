@@ -33,13 +33,13 @@ export async function POST(req: NextRequest) {
         if (action === 'collect') {
             const currentTime = new Date();
             const lastFarmTime = user.lastFarmTime;
-
+            
             if (!lastFarmTime || !user.isFarming) {
                 return NextResponse.json({ error: 'Not farming' }, { status: 400 });
             }
 
             const timeElapsed = Math.floor((currentTime.getTime() - lastFarmTime.getTime()) / 1000);
-            const pointsToAdd = Math.min(Math.floor(timeElapsed / 2), 30 - (user.farmingPoints || 0));
+            const pointsToAdd = Math.min(Math.floor(timeElapsed / 2), 60 - (user.farmingPoints || 0));
 
             if (pointsToAdd <= 0) {
                 return NextResponse.json({ error: 'No points to collect' }, { status: 400 });
@@ -52,14 +52,14 @@ export async function POST(req: NextRequest) {
                     fpoints: { increment: pointsToAdd },
                     farmingPoints: { increment: pointsToAdd },
                     lastFarmTime: currentTime,
-                    isFarming: user.farmingPoints + pointsToAdd < 30
+                    isFarming: user.farmingPoints + pointsToAdd < 60
                 }
             });
 
-            return NextResponse.json({
-                success: true,
-                pointsAdded: pointsToAdd,
-                user: updatedUser
+            return NextResponse.json({ 
+                success: true, 
+                pointsAdded: pointsToAdd, 
+                user: updatedUser 
             });
         }
 
