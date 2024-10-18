@@ -38,8 +38,8 @@ export async function POST(req: NextRequest) {
                 return NextResponse.json({ error: 'Not farming' }, { status: 400 });
             }
 
-            const timeElapsed = Math.floor((currentTime.getTime() - lastFarmTime.getTime()) / 1000);
-            const pointsToAdd = Math.min(Math.floor(timeElapsed / 5), 60 - (user.farmingPoints || 0));
+            const timeElapsed = Math.floor((currentTime.getTime() - lastFarmTime.getTime()) / 3000);
+            const pointsToAdd = Math.min(Math.floor(timeElapsed / 2), 60 - (user.farmingPoints || 0));
 
             if (pointsToAdd <= 0) {
                 return NextResponse.json({ error: 'No points to collect' }, { status: 400 });
