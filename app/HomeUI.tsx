@@ -49,30 +49,26 @@ export default function HomeUI({
     let interval: NodeJS.Timeout;
     
     if (user.isFarming) {
-        setFarmingStatus('Farming...');
-        interval = setInterval(() => {
-            const now = new Date();
-            const lastFarm = new Date(user.lastFarmTime);
-            const elapsed = Math.floor((now.getTime() - lastFarm.getTime()) / 1000);
-            const points = Math.min(Math.floor(elapsed / 2), 30); // Changed from 60 to 30
-            setCurrentFarmPoints(points);
-            setFarmingStatus(`Farming (${points} PD)...`);
-            
-            if (points >= 30) { // When reached 30 points, trigger collection
-                handleFarmClick(); // This will trigger the collection
-            }
-        }, 1000);
+      setFarmingStatus('Farming...');
+      interval = setInterval(() => {
+        const now = new Date();
+        const lastFarm = new Date(user.lastFarmTime);
+        const elapsed = Math.floor((now.getTime() - lastFarm.getTime()) / 1000);
+        const points = Math.min(Math.floor(elapsed / 2), 30 - (user.farmingPoints || 0));
+        setCurrentFarmPoints(points);
+        setFarmingStatus(`Farming (${points} PD)...`);
+      }, 1000);
     } else {
-        setFarmingStatus('Farm PixelDogs...');
-        setCurrentFarmPoints(0);
+      setFarmingStatus('Farm PixelDogs...');
+      setCurrentFarmPoints(0);
     }
 
     return () => {
-        if (interval) {
-            clearInterval(interval);
-        }
+      if (interval) {
+        clearInterval(interval);
+      }
     };
-}, [user.isFarming, user.lastFarmTime]);
+  }, [user.isFarming, user.lastFarmTime, user.farmingPoints]);
 
   return (
     <div className="home-container">
