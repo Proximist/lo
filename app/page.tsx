@@ -122,32 +122,6 @@ export default function Home() {
           console.error('Error while farming:', error)
         }
       }
-    }
-
-    return () => clearInterval(interval)
-  }
-
-  const handleFarmClick = async () => {
-    if (isFarming) return
-
-    try {
-      const res = await fetch('/api/start-farm', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ telegramId: user.telegramId }),
-      })
-      const data = await res.json()
-      if (data.success) {
-        setIsFarming(true)
-        setFarmAmount(0)
-        startFarming(new Date(data.farmStartTime), 0)
-      }
-    } catch (error) {
-      console.error('Error starting farm:', error)
-    }
-  }
     }, 1000)
 
     return () => clearInterval(interval)
@@ -168,7 +142,7 @@ export default function Home() {
       if (data.success) {
         setIsFarming(true)
         setFarmAmount(0)
-        startFarming(new Date(data.farmStartTime))
+        startFarming(new Date(data.farmStartTime), 0)
       }
     } catch (error) {
       console.error('Error starting farm:', error)
@@ -227,7 +201,7 @@ export default function Home() {
 
   if (!user) return <div className="container mx-auto p-4">Loading...</div>
 
-   return (
+  return (
     <HomeUI 
       user={user}
       buttonStage1={buttonStage1}
