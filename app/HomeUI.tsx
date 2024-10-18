@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { toggleUpdateText } from './utils';
 import './HomeUI.css';
@@ -16,6 +16,9 @@ interface HomeUIProps {
   handleClaim1: () => void;
   handleClaim2: () => void;
   handleClaim3: () => void;
+  isFarming: boolean;
+  farmAmount: number;
+  handleFarmClick: () => void;
 }
 
 export default function HomeUI({
@@ -31,12 +34,10 @@ export default function HomeUI({
   handleClaim1,
   handleClaim2,
   handleClaim3,
+  isFarming,
+  farmAmount,
+  handleFarmClick,
 }: HomeUIProps) {
-  const [farming, setFarming] = useState(false);
-  const [farmAmount, setFarmAmount] = useState(0);
-  const [farmTimer, setFarmTimer] = useState(0);
-  const [totalPoints, setTotalPoints] = useState(user.points);
-
   useEffect(() => {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -44,131 +45,6 @@ export default function HomeUI({
     document.head.appendChild(link);
     toggleUpdateText();
   }, []);
-
-  useEffect(() => {
-    setTotalPoints(user.points);
-  }, [user.points]);
-
-  useEffect(() => {
-    const checkFarmingStatus = async () => {
-      try {
-        const res = await fetch('/api/check-farming', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ telegramId: user.telegramId }),
-        });
-        const data = await res.json();
-        
-        if (data.farming) {
-          const elapsedTime = Math.floor((Date.now() - new Date(data.farmStartTime).getTime()) / 1000);
-          if (elapsedTime < 60) {
-            setFarming(true);
-            setFarmTimer(60 - elapsedTime);
-            setFarmAmount(data.farmAmount);
-            startFarming(60 - elapsedTime, data.farmAmount);
-          } else {
-            // If more than 60 seconds have passed, end the farming session
-            await fetch('/api/end-farming', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ telegramId: user.telegramId }),
-            });
-          }
-        }
-      } catch (error) {
-        console.error('Error checking farming status:', error);
-      }
-    };
-    
-    checkFarmingStatus();
-  }, [user.telegramId]);
-
-  const updateFarmProgress = async (amount: number) => {
-    try {
-      await fetch('/api/update-farm-progress', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          telegramId: user.telegramId, 
-          farmAmount: amount 
-        }),
-      });
-    } catch (error) {
-      console.error('Error updating farm progress:', error);
-    }
-  };
-
-  const startFarming = async (duration = 60, initialAmount = 0) => {
-    if (farming) return;
-    
-    setFarming(true);
-    setFarmTimer(duration);
-    setFarmAmount(initialAmount);
-
-    try {
-      if (initialAmount === 0) {
-        await fetch('/api/start-farming', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ telegramId: user.telegramId }),
-        });
-      }
-
-      let localAmount = initialAmount;
-      let timeElapsed = 60 - duration;
-
-      const farmInterval = setInterval(async () => {
-        timeElapsed += 1;
-        
-        if (timeElapsed % 10 === 0) {
-          localAmount += 5;
-          setFarmAmount(localAmount);
-          
-          // Update both points and farm progress
-          try {
-            const [pointsRes] = await Promise.all([
-              fetch('/api/increase-points', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                  telegramId: user.telegramId, 
-                  pointsToAdd: 5, 
-                  buttonId: 'farm' 
-                }),
-              }),
-              updateFarmProgress(localAmount)
-            ]);
-
-            const pointsData = await pointsRes.json();
-            if (pointsData.success) {
-              setTotalPoints(pointsData.points);
-            }
-          } catch (error) {
-            console.error('Error updating points:', error);
-          }
-        }
-
-        setFarmTimer(duration - (timeElapsed - (60 - duration)));
-
-        if (timeElapsed >= 60) {
-          clearInterval(farmInterval);
-          setFarming(false);
-          setFarmTimer(0);
-          
-          await fetch('/api/end-farming', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ telegramId: user.telegramId }),
-          });
-        }
-      }, 1000);
-
-      return () => clearInterval(farmInterval);
-    } catch (error) {
-      console.error('Error during farming:', error);
-      setFarming(false);
-    }
-  };
 
   return (
     <div className="home-container">
@@ -181,11 +57,11 @@ export default function HomeUI({
           />
         </div>
         <p id="pixelDogsCount" className="pixel-dogs-count">
-          {totalPoints} PixelDogs
+          {user.points} PixelDogs
         </p>
-        <p id="updateText" className="update-text fade fade-in">
-          Exciting updates are on the way:)
-        </p>
+      <p id="updateText" className="update-text fade fade-in">
+        Exciting updates are on the way:)
+      </p>
         <div className="tasks-container">
           <button className="tasks-button">Daily Tasks..!</button>
           <div className="social-container">
@@ -236,12 +112,12 @@ export default function HomeUI({
       </div>
       <div className="flex-grow"></div>
       <button 
-        className="farm-button"
-        onClick={() => !farming && startFarming()}
-        disabled={farming}
+        className={`farm-button ${isFarming ? 'farming' : ''}`} 
+        onClick={handleFarmClick}
+        disabled={isFarming}
       >
-        {farming 
-          ? `Farming... ${farmAmount} PD (${farmTimer}s)`
+        {isFarming 
+          ? `Farming PixelDogs (${farmAmount}/60)` 
           : 'Farm PixelDogs...'}
       </button>
       <div className="footer-container">
