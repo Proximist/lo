@@ -5,7 +5,6 @@ body {
     text-align: center;
     margin: 0;
     padding: 0;
-    background-color: #fff;
 }
 
 .task-page {
@@ -14,13 +13,83 @@ body {
     flex-direction: column;
 }
 
-.header {
-    padding: 20px;
+/* Light theme styles */
+.light-theme {
+    background-color: #fff;
+    color: #000;
 }
 
+.light-theme .points {
+    background-color: #d3d3d3;
+    color: #000;
+}
+
+.light-theme .task-icon svg {
+    color: #666;
+}
+
+.light-theme .description {
+    color: #666;
+}
+
+.light-theme .task-list li {
+    border-bottom: 1px solid #ddd;
+}
+
+.light-theme .task-list li button {
+    background-color: #000;
+    color: #fff;
+}
+
+.light-theme .footer {
+    background-color: #fff;
+    border-top: 2px solid #666;
+}
+
+.light-theme .footer i {
+    color: #666;
+}
+
+/* Dark theme styles */
+.dark-theme {
+    background-color: #1c1c1e;
+    color: #fff;
+}
+
+.dark-theme .points {
+    background-color: #2c2c2e;
+    color: #fff;
+}
+
+.dark-theme .task-icon svg {
+    color: #a0a0a0;
+}
+
+.dark-theme .description {
+    color: #a0a0a0;
+}
+
+.dark-theme .task-list li {
+    border-bottom: 1px solid #3a3a3c;
+}
+
+.dark-theme .task-list li button {
+    background-color: #0a84ff;
+    color: #fff;
+}
+
+.dark-theme .footer {
+    background-color: #1c1c1e;
+    border-top: 2px solid #3a3a3c;
+}
+
+.dark-theme .footer i {
+    color: #a0a0a0;
+}
+
+/* Common styles */
 .points {
     display: inline-block;
-    background-color: #d3d3d3;
     padding: 10px 20px;
     border-radius: 20px;
     margin-top: 10px;
@@ -40,12 +109,10 @@ body {
     width: 100px;
     height: 100px;
     opacity: 0.5;
-    color: #666;
 }
 
 .description {
     font-size: 18px;
-    color: #666;
     margin-bottom: 20px;
     padding: 0 20px;
 }
@@ -61,7 +128,6 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    border-bottom: 1px solid #ddd;
 }
 
 .task-list li:last-child {
@@ -80,8 +146,6 @@ body {
 }
 
 .task-list li button {
-    background-color: #000;
-    color: #fff;
     border: none;
     padding: 10px 20px;
     border-radius: 20px;
@@ -96,7 +160,7 @@ body {
 }
 
 .task-list li button:disabled {
-    background-color: #ccc;
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
@@ -105,16 +169,13 @@ body {
     justify-content: space-around;
     align-items: center;
     padding: 20px;
-    border-top: 2px solid #666;
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: #fff;
 }
 
 .footer i {
     font-size: 24px;
-    color: #666;
 }
 
 .footer .active {
