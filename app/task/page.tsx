@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './TaskStyle.css';
+import styles from './task.module.css';
 
 const Task: React.FC = () => {
   return (
