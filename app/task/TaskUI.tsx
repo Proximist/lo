@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import './TaskUI.css';
 
@@ -12,9 +12,13 @@ interface HomeUIProps {
   handleButtonClick4: () => void;
   handleButtonClick5: () => void;
   handleButtonClick6: () => void;
+  handleButtonClick7: () => void;
+  handleButtonClick8: () => void;
   handleClaim4: () => void;
   handleClaim5: () => void;
   handleClaim6: () => void;
+  handleClaim7: () => void;
+  handleClaim8: () => void;
 }
 
 export default function HomeUI({
@@ -27,9 +31,13 @@ export default function HomeUI({
   handleButtonClick4,
   handleButtonClick5,
   handleButtonClick6,
+  handleButtonClick7,
+  handleButtonClick8,
   handleClaim4,
   handleClaim5,
   handleClaim6,
+  handleClaim7,
+  handleClaim8,
 }: HomeUIProps) {
 
   useEffect(() => {
@@ -101,6 +109,45 @@ export default function HomeUI({
               {buttonStage3 === 'check' ? '300' : buttonStage3 === 'claim' ? 'Claim' : 'Claimed'}
             </button>
           </div>
+
+          <div className="social-container">
+            <p className="social-text">Follow Our Discord!</p>
+            <button
+              onClick={() => {
+                if (buttonStage1 === 'check') {
+                  handleButtonClick7();
+                } else if (buttonStage1 === 'claim') {
+                  handleClaim7();
+                }
+              }}
+              disabled={buttonStage1 === 'claimed' || isLoading}
+              className={`claim-button ${
+                buttonStage1 === 'claimed' || isLoading ? 'disabled' : ''
+              }`}
+            >
+              {isLoading ? 'Claiming...' : buttonStage1 === 'check' ? '+150' : buttonStage1 === 'claim' ? 'Claim' : 'Claimed'}
+            </button>
+          </div>
+
+          <div className="social-container">
+            <p className="social-text">Follow Our Tiktok!</p>
+            <button
+              onClick={() => {
+                if (buttonStage1 === 'check') {
+                  handleButtonClick8();
+                } else if (buttonStage1 === 'claim') {
+                  handleClaim8();
+                }
+              }}
+              disabled={buttonStage1 === 'claimed' || isLoading}
+              className={`claim-button ${
+                buttonStage1 === 'claimed' || isLoading ? 'disabled' : ''
+              }`}
+            >
+              {isLoading ? 'Claiming...' : buttonStage1 === 'check' ? '+150' : buttonStage1 === 'claim' ? 'Claim' : 'Claimed'}
+            </button>
+          </div>
+          
         </div>
       </div>
       <div className="footer-container">
