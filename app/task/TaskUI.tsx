@@ -10,6 +10,8 @@ interface HomeUIProps {
   buttonStage7: 'check' | 'claim' | 'claimed';
   buttonStage8: 'check' | 'claim' | 'claimed';
   isLoading: boolean;
+  isLoading1: boolean;
+  isLoading2: boolean;
   notification: string;
   handleButtonClick4: () => void;
   handleButtonClick5: () => void;
@@ -31,6 +33,8 @@ export default function HomeUI({
   buttonStage7,
   buttonStage8,
   isLoading,
+  isLoading1,
+  isLoading2,
   notification,
   handleButtonClick4,
   handleButtonClick5,
@@ -124,12 +128,12 @@ export default function HomeUI({
                   handleClaim7();
                 }
               }}
-              disabled={buttonStage7 === 'claimed' || isLoading}
+              disabled={buttonStage7 === 'claimed' || isLoading1}
               className={`claim-button ${
-                buttonStage7 === 'claimed' || isLoading ? 'disabled' : ''
+                buttonStage7 === 'claimed' || isLoading1 ? 'disabled' : ''
               }`}
             >
-              {isLoading ? 'Claiming...' : buttonStage7 === 'check' ? '+150' : buttonStage7 === 'claim' ? 'Claim' : 'Claimed'}
+              {isLoading1 ? 'Claiming...' : buttonStage7 === 'check' ? '+150' : buttonStage7 === 'claim' ? 'Claim' : 'Claimed'}
             </button>
           </div>
 
@@ -143,12 +147,12 @@ export default function HomeUI({
                   handleClaim8();
                 }
               }}
-              disabled={buttonStage8 === 'claimed' || isLoading}
+              disabled={buttonStage8 === 'claimed' || isLoading2}
               className={`claim-button ${
-                buttonStage8 === 'claimed' || isLoading ? 'disabled' : ''
+                buttonStage8 === 'claimed' || isLoading2 ? 'disabled' : ''
               }`}
             >
-              {isLoading ? 'Claiming...' : buttonStage8 === 'check' ? '+150' : buttonStage8 === 'claim' ? 'Claim' : 'Claimed'}
+              {isLoading2 ? 'Claiming...' : buttonStage8 === 'check' ? '+150' : buttonStage8 === 'claim' ? 'Claim' : 'Claimed'}
             </button>
           </div>
           
