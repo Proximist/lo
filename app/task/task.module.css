@@ -15,101 +15,105 @@ body {
 
 .points {
     display: inline-block;
-    background-color: #d3d3d3;
-    padding: 10px 20px;
-    border-radius: 20px;
+    background-color: #f0f0f0;
+    padding: 8px 20px;
+    border-radius: 25px;
     margin-top: 10px;
 }
 
 .points span {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
+    color: #333;
 }
 
 .task-icon {
-    font-size: 100px;
-    margin: 20px 0;
+    margin: 30px 0;
+}
+
+.task-icon svg {
+    width: 60px;
+    height: 60px;
+    opacity: 0.6;
+    color: #666;
 }
 
 .description {
-    font-size: 18px;
+    font-size: 16px;
     color: #666;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     padding: 0 20px;
+    line-height: 1.5;
 }
 
 .task-list {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 0 20px;
 }
 
 .task-list li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
 }
 
 .task-list li:last-child {
     border-bottom: none;
 }
 
-.task-list li i, .task-list li svg {
-    font-size: 24px;
-    margin-right: 10px;
+.task-list li i {
+    font-size: 20px;
+    margin-right: 15px;
+    color: #333;
 }
 
 .task-list li span {
     flex-grow: 1;
     text-align: left;
     font-weight: 400;
+    color: #333;
+    font-size: 14px;
 }
 
 .task-list li button {
     background-color: #000;
     color: #fff;
     border: none;
-    padding: 10px 20px;
+    padding: 8px 15px;
     border-radius: 20px;
     cursor: pointer;
-    font-family: 'Fredoka One', cursive;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    font-family: inherit;
+    font-size: 14px;
+    transition: transform 0.2s ease;
 }
 
 .task-list li button:hover {
-    box-shadow: 0 0 10px 2px #00ff00;
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 .footer {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 20px;
-    border-top: 2px solid #666;
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
     position: fixed;
     bottom: 0;
-    width: calc(100% - 40px);
+    width: 100%;
     background-color: #fff;
-    margin: 0 20px;
+    box-sizing: border-box;
 }
 
 .footer i {
-    font-size: 24px;
-}
-
-.footer .active {
-    background-color: #d3d3d3;
-    padding: 10px;
-    border-radius: 50%;
-}
-
-.task-icon svg {
-    width: 100px;
-    height: 100px;
-    opacity: 0.5;
+    font-size: 20px;
     color: #666;
 }
 
+.footer .active {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 50%;
+}
