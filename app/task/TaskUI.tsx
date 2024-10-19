@@ -7,6 +7,8 @@ interface HomeUIProps {
   buttonStage1: 'check' | 'claim' | 'claimed';
   buttonStage2: 'check' | 'claim' | 'claimed';
   buttonStage3: 'check' | 'claim' | 'claimed';
+  buttonStage7: 'check' | 'claim' | 'claimed';
+  buttonStage8: 'check' | 'claim' | 'claimed';
   isLoading: boolean;
   notification: string;
   handleButtonClick4: () => void;
@@ -26,6 +28,8 @@ export default function HomeUI({
   buttonStage1,
   buttonStage2,
   buttonStage3,
+  buttonStage7,
+  buttonStage8,
   isLoading,
   notification,
   handleButtonClick4,
@@ -114,18 +118,18 @@ export default function HomeUI({
             <p className="social-text">Follow Our Discord!</p>
             <button
               onClick={() => {
-                if (buttonStage1 === 'check') {
+                if (buttonStage7 === 'check') {
                   handleButtonClick7();
-                } else if (buttonStage1 === 'claim') {
+                } else if (buttonStage7 === 'claim') {
                   handleClaim7();
                 }
               }}
-              disabled={buttonStage1 === 'claimed' || isLoading}
+              disabled={buttonStage7 === 'claimed' || isLoading}
               className={`claim-button ${
-                buttonStage1 === 'claimed' || isLoading ? 'disabled' : ''
+                buttonStage7 === 'claimed' || isLoading ? 'disabled' : ''
               }`}
             >
-              {isLoading ? 'Claiming...' : buttonStage1 === 'check' ? '+150' : buttonStage1 === 'claim' ? 'Claim' : 'Claimed'}
+              {isLoading ? 'Claiming...' : buttonStage7 === 'check' ? '+150' : buttonStage7 === 'claim' ? 'Claim' : 'Claimed'}
             </button>
           </div>
 
@@ -133,18 +137,18 @@ export default function HomeUI({
             <p className="social-text">Follow Our Tiktok!</p>
             <button
               onClick={() => {
-                if (buttonStage1 === 'check') {
+                if (buttonStage8 === 'check') {
                   handleButtonClick8();
-                } else if (buttonStage1 === 'claim') {
+                } else if (buttonStage8 === 'claim') {
                   handleClaim8();
                 }
               }}
-              disabled={buttonStage1 === 'claimed' || isLoading}
+              disabled={buttonStage8 === 'claimed' || isLoading}
               className={`claim-button ${
-                buttonStage1 === 'claimed' || isLoading ? 'disabled' : ''
+                buttonStage8 === 'claimed' || isLoading ? 'disabled' : ''
               }`}
             >
-              {isLoading ? 'Claiming...' : buttonStage1 === 'check' ? '+150' : buttonStage1 === 'claim' ? 'Claim' : 'Claimed'}
+              {isLoading ? 'Claiming...' : buttonStage8 === 'check' ? '+150' : buttonStage8 === 'claim' ? 'Claim' : 'Claimed'}
             </button>
           </div>
           
