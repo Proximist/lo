@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import './TaskUI.css';
 
@@ -47,8 +47,22 @@ export default function TaskUI({
   handleClaim7,
   handleClaim8,
 }: TaskUIProps) {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.Telegram?.WebApp) {
+      const tg = window.Telegram.WebApp;
+      setIsDarkMode(tg.colorScheme === 'dark');
+
+      // Listen for theme changes
+      tg.onEvent('themeChanged', () => {
+        setIsDarkMode(tg.colorScheme === 'dark');
+      });
+    }
+  }, []);
+
   return (
-    <div className="task-page">
+    <div className={`task-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
       <div className="header">
         <div className="points">
           <span>₱ {user.points}</span>
@@ -64,7 +78,7 @@ export default function TaskUI({
         Complete the following tasks<br />and increase PG
       </div>
       <ul className="task-list">
-        <li>
+      <li>
           <i className="fab fa-youtube"></i>
           <span>Subscribe PG YouTube channel :</span>
           <button
