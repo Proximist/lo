@@ -1,0 +1,97 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
+body {
+    font-family: 'Fredoka One', cursive;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+}
+.header {
+    padding: 20px;
+}
+.points {
+    display: inline-block;
+    background-color: #d3d3d3;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-top: 10px;
+}
+.points span {
+    font-size: 24px;
+    font-weight: bold;
+}
+.task-icon {
+    font-size: 100px;
+    margin: 20px 0;
+}
+.description {
+    font-size: 18px; color: #666;
+    margin-bottom: 20px;
+    padding: 0 20px;
+}
+.task-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.task-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid #ddd;
+}
+.task-list li:last-child {
+    border-bottom: none;
+}
+.task-list li i, .task-list li svg {
+    font-size: 24px;
+    margin-right: 10px;
+}
+.task-list li span {
+    flex-grow: 1;
+    text-align: left;
+    font-weight: 400;
+}
+.task-list li button {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Fredoka One', cursive;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.task-list li button:hover {
+    box-shadow: 0 0 10px 2px #00ff00;
+    transform: scale(1.1);
+}
+.footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px;
+    border-top: 2px solid #666;
+    position: fixed;
+    bottom: 0;
+    width: calc(100% - 40px);
+    background-color: #fff;
+    margin: 0 20px;
+}
+.footer i {
+    font-size: 24px;
+}
+.footer .active {
+    background-color: #d3d3d3;
+    padding: 10px;
+    border-radius: 50%;
+}
+.task-icon svg {
+    width: 100px;
+    height: 100px;
+    opacity: 0.5;
+    color: #666;
+}
