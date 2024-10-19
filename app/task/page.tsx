@@ -149,7 +149,7 @@ export default function Home() {
   const handleClaim7 = () => {
     if (buttonStage1 === 'claim') {
       setIsLoading(true)
-      handleIncreasePoints(150, 'button4')
+      handleIncreasePoints(150, 'button7')
       setTimeout(() => {
         setButtonStage1('claimed')
         setIsLoading(false)
@@ -160,7 +160,7 @@ export default function Home() {
   const handleClaim8 = () => {
     if (buttonStage1 === 'claim') {
       setIsLoading(true)
-      handleIncreasePoints(150, 'button4')
+      handleIncreasePoints(150, 'button8')
       setTimeout(() => {
         setButtonStage1('claimed')
         setIsLoading(false)
