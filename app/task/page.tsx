@@ -47,13 +47,14 @@ const Task: React.FC = () => {
           <button onClick={() => alert('Followed PG Instagram Handle!')}>+200</button>
         </li>
       </ul>
-      <div className="footer" style={{ margin: '0 20px' }}>
+      <div className="footer">
         <i className="fas fa-home"></i>
         <i className="fas fa-clipboard-list active"></i>
         <i className="fas fa-user-plus"></i>
       </div>
     </div>
   );
-};
+}
 
 export default Task;
+
