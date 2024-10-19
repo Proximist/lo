@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
-import styles from './task.module.css';
+import styles from './task.module.cs';
 
 const Task: React.FC = () => {
   return (
