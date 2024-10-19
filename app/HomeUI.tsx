@@ -155,7 +155,7 @@ export default function HomeUI({
             <p className="text-sm">Friends</p>
           </a>
         </Link>
-        <Link href="/wallet">
+        <Link href="/task">
           <a className="flex flex-col items-center text-gray-800">
             <i className="fas fa-wallet text-2xl"></i>
             <p className="text-sm">Wallet</p>
