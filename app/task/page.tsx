@@ -45,6 +45,9 @@ export default function Home() {
               setButtonStage1(data.user.claimedButton4 ? 'claimed' : 'check')
               setButtonStage2(data.user.claimedButton5 ? 'claimed' : 'check')
               setButtonStage3(data.user.claimedButton6 ? 'claimed' : 'check')
+              setButtonStage3(data.user.claimedButton7 ? 'claimed' : 'check')
+              setButtonStage3(data.user.claimedButton8 ? 'claimed' : 'check')
+              
             }
           })
           .catch(() => {
@@ -104,6 +107,20 @@ export default function Home() {
     }
   }
 
+  const handleButtonClick7 = () => {
+    if (buttonStage3 === 'check') {
+      window.open('https://discord.com', '_blank')
+      setButtonStage3('claim')
+    }
+  }
+
+  const handleButtonClick8 = () => {
+    if (buttonStage3 === 'check') {
+      window.open('https://tiktok.com', '_blank')
+      setButtonStage3('claim')
+    }
+  }
+
   const handleClaim4 = () => {
     if (buttonStage1 === 'claim') {
       setIsLoading(true)
@@ -129,6 +146,28 @@ export default function Home() {
     }
   }
 
+  const handleClaim7 = () => {
+    if (buttonStage1 === 'claim') {
+      setIsLoading(true)
+      handleIncreasePoints(150, 'button4')
+      setTimeout(() => {
+        setButtonStage1('claimed')
+        setIsLoading(false)
+      }, 3000)
+    }
+  }
+
+  const handleClaim8 = () => {
+    if (buttonStage1 === 'claim') {
+      setIsLoading(true)
+      handleIncreasePoints(150, 'button4')
+      setTimeout(() => {
+        setButtonStage1('claimed')
+        setIsLoading(false)
+      }, 3000)
+    }
+  }
+
   
   if (error) {
     return <div className="container mx-auto p-4 text-red-500">{error}</div>
@@ -147,9 +186,14 @@ export default function Home() {
       handleButtonClick4={handleButtonClick4}
       handleButtonClick5={handleButtonClick5}
       handleButtonClick6={handleButtonClick6}
+      handleButtonClick7={handleButtonClick7}
+      handleButtonClick8={handleButtonClick8}
       handleClaim4={handleClaim4}
       handleClaim5={handleClaim5}
       handleClaim6={handleClaim6}
+      handleClaim7={handleClaim7}
+      handleClaim8={handleClaim8}
+      
     />
   )
 }
