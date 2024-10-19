@@ -72,7 +72,7 @@ export default function HomeUI({
                 buttonStage1 === 'claimed' || isLoading ? 'disabled' : ''
               }`}
             >
-              {isLoading ? 'Claiming...' : buttonStage1 === 'check' ? 'Check' : buttonStage1 === 'claim' ? 'Claim' : 'Claimed'}
+              {isLoading ? 'Claiming...' : buttonStage1 === 'check' ? '100' : buttonStage1 === 'claim' ? 'Claim' : 'Claimed'}
             </button>
           </div>
           <div className="social-container">
@@ -85,7 +85,7 @@ export default function HomeUI({
               disabled={buttonStage2 === 'claimed'}
               className="claim-button"
             >
-              {buttonStage2 === 'check' ? 'Check' : buttonStage2 === 'claim' ? 'Claim' : 'Claimed'}
+              {buttonStage2 === 'check' ? '150' : buttonStage2 === 'claim' ? 'Claim' : 'Claimed'}
             </button>
           </div>
           <div className="social-container">
@@ -98,7 +98,7 @@ export default function HomeUI({
               disabled={buttonStage3 === 'claimed'}
               className="claim-button"
             >
-              {buttonStage3 === 'check' ? 'Check' : buttonStage3 === 'claim' ? 'Claim' : 'Claimed'}
+              {buttonStage3 === 'check' ? '300' : buttonStage3 === 'claim' ? 'Claim' : 'Claimed'}
             </button>
           </div>
         </div>
