@@ -23,6 +23,8 @@ export async function POST(req: NextRequest) {
         claimedButton5: true,
         claimedButton4: true,
         claimedButton6: true,
+        claimedButton7: true,
+        claimedButton8: true,
         invitedUsers: true,
         invitedBy: true
       }
