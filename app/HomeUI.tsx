@@ -157,8 +157,8 @@ export default function HomeUI({
         </Link>
         <Link href="/task">
           <a className="flex flex-col items-center text-gray-800">
-            <i className="fas fa-wallet text-2xl"></i>
-            <p className="text-sm">Wallet</p>
+            <i className="fas fa-clipboard text-2xl"></i>
+            <p className="text-sm">Taskst</p>
           </a>
         </Link>
       </div>
