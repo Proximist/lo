@@ -100,29 +100,6 @@ body {
     cursor: not-allowed;
 }
 
-.footer {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 20px;
-    border-top: 2px solid #666;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background-color: #fff;
-}
-
-.footer i {
-    font-size: 24px;
-    color: #666;
-}
-
-.footer .active {
-    background-color: #d3d3d3;
-    padding: 10px;
-    border-radius: 50%;
-}
-
 .notification-banner {
     position: fixed;
     top: 20px;
