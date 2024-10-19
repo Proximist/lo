@@ -140,7 +140,7 @@ export default function TaskUI({
         </li>
       </ul>
       <div className="footer">
-         <Link href="/">
+        <Link href="/">
           <a><i className="fas fa-home"></i></a>
         </Link>
         <Link href="/task">
