@@ -150,7 +150,6 @@ export default function Home() {
       handleClaim4={handleClaim4}
       handleClaim5={handleClaim5}
       handleClaim6={handleClaim6}
-      handleFarmClick={handleFarmClick}
     />
   )
 }
