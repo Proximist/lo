@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import './TaskUI.css';
 
-interface HomeUIProps {
+interface TaskUIProps {
   user: any;
   buttonStage1: 'check' | 'claim' | 'claimed';
   buttonStage2: 'check' | 'claim' | 'claimed';
@@ -25,7 +25,7 @@ interface HomeUIProps {
   handleClaim8: () => void;
 }
 
-export default function HomeUI({
+export default function TaskUI({
   user,
   buttonStage1,
   buttonStage2,
@@ -46,138 +46,111 @@ export default function HomeUI({
   handleClaim6,
   handleClaim7,
   handleClaim8,
-}: HomeUIProps) {
-
-  useEffect(() => {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css';
-    document.head.appendChild(link);
-  }, []);
-
+}: TaskUIProps) {
   return (
-    <div className="home-container">
-      <div className="header-container">
-        <div className="dog-image-container">
-          <img
-            alt="Animated style dog image"
-            className="dog-image"
-            src="https://storage.googleapis.com/a1aa/image/YlpvEfbklKRiDi8LX5Rww5U3zZZwHEUfju1qUNknpEZ6e2OnA.jpg"
-          />
-        </div>
-        <p id="pixelDogsCount" className="pixel-dogs-count">
-          {user.points} PixelDogs
-        </p>
-        <p id="updateText" className="update-text fade fade-in">
-          Exciting updates are on the way:)
-        </p>
-        <div className="tasks-container">
-          <button className="tasks-button">Daily Tasks..!</button>
-          <div className="social-container">
-            <p className="social-text">Follow Our Youtube!</p>
-            <button
-              onClick={() => {
-                if (buttonStage1 === 'check') {
-                  handleButtonClick4();
-                } else if (buttonStage1 === 'claim') {
-                  handleClaim4();
-                }
-              }}
-              disabled={buttonStage1 === 'claimed' || isLoading}
-              className={`claim-button ${
-                buttonStage1 === 'claimed' || isLoading ? 'disabled' : ''
-              }`}
-            >
-              {isLoading ? 'Claiming...' : buttonStage1 === 'check' ? '100' : buttonStage1 === 'claim' ? 'Claim' : 'Claimed'}
-            </button>
-          </div>
-          <div className="social-container">
-            <p className="social-text">Follow Our Twitter!</p>
-            <button
-              onClick={() => {
-                handleButtonClick5();
-                handleClaim5();
-              }}
-              disabled={buttonStage2 === 'claimed'}
-              className="claim-button"
-            >
-              {buttonStage2 === 'check' ? '150' : buttonStage2 === 'claim' ? 'Claim' : 'Claimed'}
-            </button>
-          </div>
-          <div className="social-container">
-            <p className="social-text">Join Our Telegram!</p>
-            <button
-              onClick={() => {
-                handleButtonClick6();
-                handleClaim6();
-              }}
-              disabled={buttonStage3 === 'claimed'}
-              className="claim-button"
-            >
-              {buttonStage3 === 'check' ? '300' : buttonStage3 === 'claim' ? 'Claim' : 'Claimed'}
-            </button>
-          </div>
-
-          <div className="social-container">
-            <p className="social-text">Follow Our Discord!</p>
-            <button
-              onClick={() => {
-                if (buttonStage7 === 'check') {
-                  handleButtonClick7();
-                } else if (buttonStage7 === 'claim') {
-                  handleClaim7();
-                }
-              }}
-              disabled={buttonStage7 === 'claimed' || isLoading1}
-              className={`claim-button ${
-                buttonStage7 === 'claimed' || isLoading1 ? 'disabled' : ''
-              }`}
-            >
-              {isLoading1 ? 'Claiming...' : buttonStage7 === 'check' ? '+150' : buttonStage7 === 'claim' ? 'Claim' : 'Claimed'}
-            </button>
-          </div>
-
-          <div className="social-container">
-            <p className="social-text">Follow Our Tiktok!</p>
-            <button
-              onClick={() => {
-                if (buttonStage8 === 'check') {
-                  handleButtonClick8();
-                } else if (buttonStage8 === 'claim') {
-                  handleClaim8();
-                }
-              }}
-              disabled={buttonStage8 === 'claimed' || isLoading2}
-              className={`claim-button ${
-                buttonStage8 === 'claimed' || isLoading2 ? 'disabled' : ''
-              }`}
-            >
-              {isLoading2 ? 'Claiming...' : buttonStage8 === 'check' ? '+150' : buttonStage8 === 'claim' ? 'Claim' : 'Claimed'}
-            </button>
-          </div>
-          
+    <div className="task-page">
+      <div className="header">
+        <div className="points">
+          <span>₱ {user.points}</span>
         </div>
       </div>
-      <div className="footer-container">
+      <div className="task-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9 11l3 3L22 4"></path>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+        </svg>
+      </div>
+      <div className="description">
+        Complete the following tasks<br />and increase PG
+      </div>
+      <ul className="task-list">
+        <li>
+          <i className="fab fa-youtube"></i>
+          <span>Subscribe PG YouTube channel :</span>
+          <button
+            onClick={() => {
+              if (buttonStage1 === 'check') {
+                handleButtonClick4();
+              } else if (buttonStage1 === 'claim') {
+                handleClaim4();
+              }
+            }}
+            disabled={buttonStage1 === 'claimed' || isLoading}
+          >
+            {isLoading ? 'Claiming...' : buttonStage1 === 'check' ? '+200' : buttonStage1 === 'claim' ? 'Claim' : 'Claimed'}
+          </button>
+        </li>
+        <li>
+          <i className="fab fa-telegram-plane"></i>
+          <span>Subscribe PG Telegram Channel :</span>
+          <button
+            onClick={() => {
+              handleButtonClick6();
+              handleClaim6();
+            }}
+            disabled={buttonStage3 === 'claimed'}
+          >
+            {buttonStage3 === 'check' ? '+200' : buttonStage3 === 'claim' ? 'Claim' : 'Claimed'}
+          </button>
+        </li>
+        <li>
+          <i className="fab fa-twitter"></i>
+          <span>Follow PG's X Handle :</span>
+          <button
+            onClick={() => {
+              handleButtonClick5();
+              handleClaim5();
+            }}
+            disabled={buttonStage2 === 'claimed'}
+          >
+            {buttonStage2 === 'check' ? '+200' : buttonStage2 === 'claim' ? 'Claim' : 'Claimed'}
+          </button>
+        </li>
+        <li>
+          <i className="fab fa-discord"></i>
+          <span>Join PG's Discord Server :</span>
+          <button
+            onClick={() => {
+              if (buttonStage7 === 'check') {
+                handleButtonClick7();
+              } else if (buttonStage7 === 'claim') {
+                handleClaim7();
+              }
+            }}
+            disabled={buttonStage7 === 'claimed' || isLoading1}
+          >
+            {isLoading1 ? 'Claiming...' : buttonStage7 === 'check' ? '+200' : buttonStage7 === 'claim' ? 'Claim' : 'Claimed'}
+          </button>
+        </li>
+        <li>
+          <i className="fab fa-instagram"></i>
+          <span>Follow PG Instagram Handle :</span>
+          <button
+            onClick={() => {
+              if (buttonStage8 === 'check') {
+                handleButtonClick8();
+              } else if (buttonStage8 === 'claim') {
+                handleClaim8();
+              }
+            }}
+            disabled={buttonStage8 === 'claimed' || isLoading2}
+          >
+            {isLoading2 ? 'Claiming...' : buttonStage8 === 'check' ? '+200' : buttonStage8 === 'claim' ? 'Claim' : 'Claimed'}
+          </button>
+        </li>
+      </ul>
+      <div className="footer">
         <Link href="/">
-          <a className="flex flex-col items-center text-gray-800">
-            <i className="fas fa-home text-2xl"></i>
-            <p className="text-sm">Home</p>
-          </a>
-        </Link>
-        <Link href="/invite">
-          <a className="flex flex-col items-center text-gray-800">
-            <i className="fas fa-users text-2xl"></i>
-            <p className="text-sm">Friends</p>
-          </a>
+          <a><i className="fas fa-home"></i></a>
         </Link>
         <Link href="/task">
-          <a className="flex flex-col items-center text-gray-800">
-            <i className="fas fa-clipboard text-2xl"></i>
-            <p className="text-sm">Taskst</p>
-          </a>
+          <a><i className="fas fa-clipboard-list active"></i></a>
+        </Link>
+        <Link href="/invite">
+          <a><i className="fas fa-user-plus"></i></a>
         </Link>
       </div>
+      {notification && <div className="notification-banner">{notification}</div>}
     </div>
   );
 }
