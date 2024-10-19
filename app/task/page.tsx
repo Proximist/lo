@@ -1,4 +1,6 @@
-import React from 'react';
+"use client"
+
+import React, { useState } from 'react';
 import styles from './task.module.css';
 
 const Task: React.FC = () => {
