@@ -1,134 +1,133 @@
 .container {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  background-color: white;
+  align-items: center;
+  padding: 2rem;
+  background-color: #f7f7f7;
 }
 
 .content {
-  flex-grow: 1;
-  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .header {
-  text-align: center;
-  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 .iconContainer {
   display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
+  align-items: center;
+  margin-right: 1rem;
 }
 
 .icon {
-  width: 4rem;
-  height: 4rem;
-}
-
-.icon + .icon {
-  margin-left: 1rem;
+  width: 24px;
+  height: 24px;
+  fill: #333;
 }
 
 .title {
-  font-size: 1.125rem;
-  font-weight: 500;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.inviteContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.inviteText {
+  font-size: 18px;
   margin-bottom: 1rem;
 }
 
 .inviteButton {
-  width: 100%;
-  background-color: black;
-  color: white;
-  font-weight: bold;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  margin-bottom: 1.5rem;
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.invitedSection {
-  background-color: #f3f4f6;
-  border-radius: 0.5rem;
-  padding: 2rem;
-}
-
-.invitedHeader {
-  display: flex;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.invitedIcon {
-  width: 1.5rem;
-  height: 1.5rem;
-  margin-right: 0.5rem;
-}
-
-.invitedTitle {
-  font-size: 1.25rem;
-  font-weight: bold;
-}
-.invitedList {
-  font-size: 1rem;
-  font-weight: bold;
-  
-}
-.emptyState {
-  text-align: center;
-  padding: 2rem 0;
-  font-weight: bold;
-}
-
-.emptyStateIcon {
-  width: 3rem;
-  height: 3rem;
-  margin: 0 auto 1rem;
-}
-
-.emptyStateText {
-  font-size: 1.125rem;
-  font-weight: bold;
+.inviteButton:hover {
+  background-color: #3e8e41;
 }
 
 .notification {
+  font-size: 16px;
+  color: #666;
   margin-top: 1rem;
-  padding: 0.5rem;
-  background-color: #d1fae5;
-  color: #047857;
-  border-radius: 0.25rem;
 }
 
-.footer-container {
-  background-color: white; /* White background */
-  width: 100%;
-  padding: 1rem; /* Space inside */
-  display: flex;
-  justify-content: space-around; /* Evenly spaced items */
-  align-items: center; /* Centered vertically */
-  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
-  position: fixed; /* Fixed position */
-  bottom: 0; /* Sticks to the bottom */
-  left: 0; /* Aligns to the left */
-  z-index: 1000; /* Ensures it stays above other content */
-}
-
-
-.footer-link {
+.invitedUsersContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: black; /* Changed from #4a5568 */
-  transition: color 0.3s;
+  margin-bottom: 2rem;
 }
 
-.footer-link:hover {
-  color: #2d3748; /* hover:text-gray-900 */
+.invitedUsersTitle {
+  font-size: 18px;
+  margin-bottom: 0.5rem;
 }
 
-.footer-icon {
-  font-size: 1.5rem; /* text-2xl */
+.invitedUsersList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.footer-text {
-  font-weight: 500; /* font-medium */
+.invitedUsersList li {
+  margin-bottom: 0.5rem;
+}
+
+.invitedUsersList li:last-child {
+  margin-bottom: 0;
+}
+
+.footerContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1rem;
+  background-color: white; /* Ensure the footer has a background */
+}
+
+.inviteIconContainer {
+  position: relative; /* Needed for absolute positioning of the faded circle */
+}
+
+.fadedCircle {
+  position: absolute;
+  top: -5px; /* Adjust as needed */
+  left: -5px; /* Adjust as needed */
+  width: 30px; /* Size of the faded circle */
+  height: 30px; /* Size of the faded circle */
+  border-radius: 50%; /* Make it circular */
+  background-color: rgba(0, 0, 0, 0.2); /* Faded effect */
+  z-index: -1; /* Place it behind the icon */
+}
+
+.error {
+  color: #red;
+  font-size: 18px;
+  margin-bottom: 1rem;
+}
+
+.loading {
+  font-size: 18px;
+  margin-bottom: 1rem;
 }
