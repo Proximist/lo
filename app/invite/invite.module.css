@@ -1,133 +1,129 @@
 .container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-  background-color: #f7f7f7;
+  min-height: 100vh;
+  background-color: white;
 }
 
 .content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  flex-grow: 1;
+  padding: 1rem;
 }
 
 .header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .iconContainer {
   display: flex;
-  align-items: center;
-  margin-right: 1rem;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
 
 .icon {
-  width: 24px;
-  height: 24px;
-  fill: #333;
+  width: 4rem;
+  height: 4rem;
+}
+
+.icon + .icon {
+  margin-left: 1rem;
 }
 
 .title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
-.inviteContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 2rem;
-}
-
-.inviteText {
-  font-size: 18px;
+  font-size: 1.125rem;
+  font-weight: 500;
   margin-bottom: 1rem;
 }
 
 .inviteButton {
-  background-color: #4CAF50;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  width: 100%;
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
-.inviteButton:hover {
-  background-color: #3e8e41;
+.invitedSection {
+  background-color: #f3f4f6;
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.invitedHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.invitedIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.invitedTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.emptyStateIcon {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 1rem;
+}
+
+.emptyStateText {
+  font-size: 1.125rem;
+  font-weight: bold;
 }
 
 .notification {
-  font-size: 16px;
-  color: #666;
   margin-top: 1rem;
+  padding: 0.5rem;
+  background-color: #d1fae5;
+  color: #047857;
+  border-radius: 0.25rem;
 }
 
-.invitedUsersContainer {
+.footer-container {
+  background-color: white; /* White background */
+  width: 100%;
+  padding: 1rem; /* Space inside */
+  display: flex;
+  justify-content: space-around; /* Evenly spaced items */
+  align-items: center; /* Centered vertically */
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed; /* Fixed position */
+  bottom: 0; /* Sticks to the bottom */
+  left: 0; /* Aligns to the left */
+  z-index: 1000; /* Ensures it stays above other content */
+}
+
+
+.footer-link {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 2rem;
+  color: black; /* Changed from #4a5568 */
+  transition: color 0.3s;
 }
 
-.invitedUsersTitle {
-  font-size: 18px;
-  margin-bottom: 0.5rem;
+.footer-link:hover {
+  color: #2d3748; /* hover:text-gray-900 */
 }
 
-.invitedUsersList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.footer-icon {
+  font-size: 1.5rem; /* text-2xl */
 }
 
-.invitedUsersList li {
-  margin-bottom: 0.5rem;
-}
-
-.invitedUsersList li:last-child {
-  margin-bottom: 0;
-}
-
-.footerContainer {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 1rem;
-  background-color: white; /* Ensure the footer has a background */
-}
-
-.inviteIconContainer {
-  position: relative; /* Needed for absolute positioning of the faded circle */
-}
-
-.fadedCircle {
-  position: absolute;
-  top: -5px; /* Adjust as needed */
-  left: -5px; /* Adjust as needed */
-  width: 30px; /* Size of the faded circle */
-  height: 30px; /* Size of the faded circle */
-  border-radius: 50%; /* Make it circular */
-  background-color: rgba(0, 0, 0, 0.2); /* Faded effect */
-  z-index: -1; /* Place it behind the icon */
-}
-
-.error {
-  color: #red;
-  font-size: 18px;
-  margin-bottom: 1rem;
-}
-
-.loading {
-  font-size: 18px;
-  margin-bottom: 1rem;
+.footer-text {
+  font-weight: 500; /* font-medium */
 }
