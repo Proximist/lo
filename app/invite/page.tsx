@@ -129,8 +129,7 @@ export default function Invite() {
           <div className={styles.notification}>{notification}</div>
         )}
       </div>
-
-      <div className="bg-white w-full py-4 flex justify-around items-center shadow-t-lg">
+<div className="footer-container">
         <Link href="/">
           <a className="flex flex-col items-center text-gray-800">
             <i className="fas fa-home text-2xl"></i>
@@ -146,7 +145,7 @@ export default function Invite() {
         <Link href="/task">
           <a className="flex flex-col items-center text-gray-800">
             <i className="fas fa-clipboard text-2xl"></i>
-            <p className="text-sm">Wallet</p>
+            <p className="text-sm">Tasks</p>
           </a>
         </Link>
       </div>
