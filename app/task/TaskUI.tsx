@@ -69,7 +69,7 @@ export default function TaskUI({
           <span>₱ {user.points}</span>
         </div>
       </div>
-      <div className="task-icon-container"> <!-- New container added -->
+      <div className="task-icon-container">
     <div className="task-icon">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 11l3 3L22 4"></path>
@@ -77,7 +77,6 @@ export default function TaskUI({
         </svg>
     </div>
 </div>
-
       <div className="description">
         Complete the following tasks<br />and increase PG
       </div>
