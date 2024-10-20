@@ -1,4 +1,3 @@
-// app/api/farm-points/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
@@ -19,11 +18,12 @@ export async function POST(req: NextRequest) {
         }
 
         if (action === 'start') {
+            const currentTime = new Date();
             const updatedUser = await prisma.user.update({
                 where: { telegramId },
                 data: {
                     isFarming: true,
-                    lastFarmTime: new Date(),
+                    farmStartTime: currentTime,
                     farmingPoints: 0
                 }
             });
@@ -32,27 +32,22 @@ export async function POST(req: NextRequest) {
 
         if (action === 'collect') {
             const currentTime = new Date();
-            const lastFarmTime = user.lastFarmTime;
+            const farmStartTime = user.farmStartTime;
             
-            if (!lastFarmTime || !user.isFarming) {
+            if (!farmStartTime || !user.isFarming) {
                 return NextResponse.json({ error: 'Not farming' }, { status: 400 });
             }
 
-            const timeElapsed = Math.floor((currentTime.getTime() - lastFarmTime.getTime()) / 1000);
-            const pointsToAdd = Math.min(Math.floor(timeElapsed / 2), 60 - (user.farmingPoints || 0));
-
-            if (pointsToAdd <= 0) {
-                return NextResponse.json({ error: 'No points to collect' }, { status: 400 });
-            }
+            const timeElapsed = Math.floor((currentTime.getTime() - farmStartTime.getTime()) / 1000);
+            const pointsToAdd = Math.min(Math.floor(timeElapsed / 2), 60);
 
             const updatedUser = await prisma.user.update({
                 where: { telegramId },
                 data: {
                     points: { increment: pointsToAdd },
-                    fpoints: { increment: pointsToAdd },
                     farmingPoints: { increment: pointsToAdd },
-                    lastFarmTime: currentTime,
-                    isFarming: user.farmingPoints + pointsToAdd < 60
+                    isFarming: pointsToAdd < 60,
+                    farmStartTime: pointsToAdd < 60 ? farmStartTime : null
                 }
             });
 
