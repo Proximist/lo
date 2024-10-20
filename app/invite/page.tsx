@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { WebApp } from '@twa-dev/types'
 import styles from './invite.module.css'
-import CircularProgress from '@mui/material/CircularProgress';
 
 declare global {
   interface Window {
@@ -77,12 +76,8 @@ export default function Invite() {
     return <div className={styles.error}>{error}</div>
   }
 
-  if (!user) return (
-  <div className="container mx-auto p-4">
-    <CircularProgress />
-  </div>
-);
-  
+  if (!user) return <div className={styles.loading}>Loading...</div>
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -134,23 +129,23 @@ export default function Invite() {
           <div className={styles.notification}>{notification}</div>
         )}
       </div>
-<div className="footer-container">
+      <div className={styles.footerContainer}>
         <Link href="/">
-          <a className="flex flex-col items-center text-gray-800">
+          <a className={styles.footerLink}>
             <i className="fas fa-home text-2xl"></i>
-            <p className="text-sm">Home</p>
+            <span className={styles.footerText}>Home</span>
           </a>
         </Link>
         <Link href="/invite">
-          <a className="flex flex-col items-center text-gray-800">
+          <a className={`${styles.footerLink} ${styles.activeFooterLink}`}>
             <i className="fas fa-users text-2xl"></i>
-            <p className="text-sm">Friends</p>
+            <span className={styles.footerText}>Friends</span>
           </a>
         </Link>
         <Link href="/task">
-          <a className="flex flex-col items-center text-gray-800">
+          <a className={styles.footerLink}>
             <i className="fas fa-clipboard text-2xl"></i>
-            <p className="text-sm">Tasks</p>
+            <span className={styles.footerText}>Tasks</span>
           </a>
         </Link>
       </div>
