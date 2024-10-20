@@ -83,12 +83,7 @@ export default function TaskUI({
         <li>
             <i className="fab fa-youtube"></i>
             <span>Subscribe PG YouTube channel :</span>
-            <button>
-                <!-- Button content -->
-            </button>
-        </li>
-    </ul>
-</div>
+            <button
 
             onClick={() => {
               if (buttonStage1 === 'check') {
