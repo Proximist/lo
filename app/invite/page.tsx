@@ -74,7 +74,11 @@ export default function Invite() {
     return <div className={styles.error}>{error}</div>
   }
 
-  if (!user) return <div className={styles.loading}>Loading...</div>
+  if (!user) return (
+  <div className="loading-container">
+    <i className="fas fa-spinner fa-spin"></i>
+  </div>
+);
 
   return (
     <div className={`${styles.container} ${isDarkMode ? styles.darkMode : ''}`}>
