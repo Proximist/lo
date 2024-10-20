@@ -42,7 +42,7 @@
   font-size: 2rem; /* text-3xl */
   margin-top: 1rem; /* mt-4 */
   font-weight: 300; /* Matches wght value in the variation settings */
-  font-family: 'Fredoka', sans-serif;
+  font-family: 'Fredoka One', sans-serif;
   font-style: normal;
   font-variation-settings: "wght" 600;
 }
