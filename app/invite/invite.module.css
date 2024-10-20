@@ -68,7 +68,11 @@
   font-size: 1.25rem;
   font-weight: bold;
 }
-
+.invitedList {
+  font-size: 1rem;
+  font-weight: bold;
+  
+}
 .emptyState {
   text-align: center;
   padding: 2rem 0;
