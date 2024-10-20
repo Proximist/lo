@@ -99,6 +99,12 @@ body {
     font-size: 24px;
     font-weight: bold;
 }
+.task-icon-container {
+    display: flex;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;    /* Centers vertically (if height is defined) */
+    height: 100vh;         /* Optional: Full viewport height for vertical centering */
+}
 
 .task-icon {
     font-size: 100px;
