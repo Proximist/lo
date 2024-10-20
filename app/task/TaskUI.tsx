@@ -62,26 +62,34 @@ export default function TaskUI({
   }, []);
 
   return (
-    <div className={`task-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
-      <div className="header">
+   <div className={`task-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
+    <div className="header">
         <div className="points">
-          <span>₱ {user.points}</span>
+            <span>₱ {user.points}</span>
         </div>
-      </div>
-      <div className="task-icon">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M9 11l3 3L22 4"></path>
-          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-        </svg>
-      </div>
-      <div className="description">
+    </div>
+    <div className="task-icon-container"> <!-- Added container -->
+        <div className="task-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 11l3 3L22 4"></path>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+            </svg>
+        </div>
+    </div>
+    <div className="description">
         Complete the following tasks<br />and increase PG
-      </div>
-      <ul className="task-list">
-      <li>
-          <i className="fab fa-youtube"></i>
-          <span>Subscribe PG YouTube channel :</span>
-          <button
+    </div>
+    <ul className="task-list">
+        <li>
+            <i className="fab fa-youtube"></i>
+            <span>Subscribe PG YouTube channel :</span>
+            <button>
+                <!-- Button content -->
+            </button>
+        </li>
+    </ul>
+</div>
+
             onClick={() => {
               if (buttonStage1 === 'check') {
                 handleButtonClick4();
