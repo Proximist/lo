@@ -39,10 +39,9 @@
 
 .pixel-dogs-count {
   color: black;
+  font-size: 2rem;
   font-family: 'Fredoka One', cursive;
-  text-align: center;
-  margin: 0;
-  padding: 0;
+  margin-top: 1rem;
 }
 
 .tasks-container {
