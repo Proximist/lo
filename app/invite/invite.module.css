@@ -49,7 +49,7 @@
 .invitedSection {
   background-color: #f3f4f6;
   border-radius: 0.5rem;
-  padding: 1rem;
+  padding: 2rem;
 }
 
 .invitedHeader {
@@ -65,7 +65,7 @@
 }
 
 .invitedTitle {
-  font-size: 5.25rem;
+  font-size: 1.25rem;
   font-weight: bold;
 }
 
