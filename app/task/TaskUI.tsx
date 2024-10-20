@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import './TaskUI.css';
@@ -62,29 +63,29 @@ export default function TaskUI({
   }, []);
 
   return (
-   <div className={`task-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
-    <div className="header">
+    <div className={`task-page ${isDarkMode ? 'dark-theme' : 'light-theme'}`}>
+      <div className="header">
         <div className="points">
-            <span>₱ {user.points}</span>
+          <span>₱ {user.points}</span>
         </div>
+      </div>
+      <div className="task-icon-container"> <!-- New container added -->
+    <div className="task-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 11l3 3L22 4"></path>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+        </svg>
     </div>
-    <div className="task-icon-container"> <!-- Added container -->
-        <div className="task-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 11l3 3L22 4"></path>
-                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
-            </svg>
-        </div>
-    </div>
-    <div className="description">
-        Complete the following tasks<br />and increase PG
-    </div>
-    <ul className="task-list">
-        <li>
-            <i className="fab fa-youtube"></i>
-            <span>Subscribe PG YouTube channel :</span>
-            <button
+</div>
 
+      <div className="description">
+        Complete the following tasks<br />and increase PG
+      </div>
+      <ul className="task-list">
+      <li>
+          <i className="fab fa-youtube"></i>
+          <span>Subscribe PG YouTube channel :</span>
+          <button
             onClick={() => {
               if (buttonStage1 === 'check') {
                 handleButtonClick4();
@@ -156,24 +157,15 @@ export default function TaskUI({
           </button>
         </li>
       </ul>
-      <div className="footer-container">
+      <div className="footer">
         <Link href="/">
-          <a className="flex flex-col items-center text-gray-800">
-            <i className="fas fa-home text-2xl"></i>
-            <p className="text-sm">Home</p>
-          </a>
-        </Link>
-        <Link href="/invite">
-          <a className="flex flex-col items-center text-gray-800">
-            <i className="fas fa-users text-2xl"></i>
-            <p className="text-sm">Friends</p>
-          </a>
+          <a><i className="fas fa-home"></i></a>
         </Link>
         <Link href="/task">
-          <a className="flex flex-col items-center text-gray-800">
-            <i className="fas fa-clipboard text-2xl"></i>
-            <p className="text-sm">Tasks</p>
-          </a>
+          <a><i className="fas fa-clipboard-list active"></i></a>
+        </Link>
+        <Link href="/invite">
+          <a><i className="fas fa-user-plus"></i></a>
         </Link>
       </div>
       {notification && <div className="notification-banner">{notification}</div>}
