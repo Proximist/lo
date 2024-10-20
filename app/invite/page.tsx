@@ -14,7 +14,7 @@ declare global {
 }
 
 export default function Invite() {
-  const [user, setUser ] = useState<any>(null)
+  const [user, setUser] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
   const [notification, setNotification] = useState('')
   const [inviteLink, setInviteLink] = useState('')
@@ -44,7 +44,7 @@ export default function Invite() {
             if (data.error) {
               setError(data.error)
             } else {
-              setUser (data.user)
+              setUser(data.user)
               setInviteLink(`https://t.me/miniappw21bot/cdprojekt/start?startapp=${data.user.telegramId}`)
               setInvitedUsers(data.user.invitedUsers || [])
             }
@@ -88,27 +88,48 @@ export default function Invite() {
               <path d="M20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12Z" stroke="currentColor" strokeWidth="2"/>
             </svg>
             <svg className={styles.icon} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15  12Z" stroke="currentColor" strokeWidth="2"/>
+              <path d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z" stroke="currentColor" strokeWidth="2"/>
               <path d="M20 12C20 16.4183 16.4183 20 12 20C7.58172 20 4 16.4183 4 12C4 7.58172 7.58172 4 12 4C16.4183 4 20 7.58172 20 12Z" stroke="currentColor" strokeWidth="2"/>
             </svg>
           </div>
-          <h1 className={styles.title}>Invite Friends</h1>
+          <p className={styles.title}>
+            Invite your friends and earn 1,000 points for each one you bring!
+          </p>
         </div>
-        <div className={styles.inviteContainer}>
-          <p className={styles.inviteText}>Invite friends to join the game!</p>
-          <button className={styles.inviteButton} onClick={handleInvite}>Copy Invite Link</button>
-          <p className={styles.notification}>{notification}</p>
+
+        <button onClick={handleInvite} className={styles.inviteButton}>
+          Copy Invite Link
+        </button>
+
+        <div className={styles.invitedSection}>
+          <div className={styles.invitedHeader}>
+            <svg className={styles.invitedIcon} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <h2 className={styles.invitedTitle}>Invited Friends : {invitedUsers.length}</h2>
+          </div>
+          {invitedUsers.length > 0 ? (
+            <ul className={styles.invitedList}>
+              {invitedUsers.map((user, index) => (
+                <li key={index}>{user}</li>
+              ))}
+            </ul>
+          ) : (
+            <div className={styles.emptyState}>
+              <svg className={styles.emptyStateIcon} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 9V11M12 15H12.01M5.07183 19H18.9282C20.4678 19 21.4301 17.3333 20.6603 16L13.7321 4C12.9623 2.66667 11.0377 2.66667 10.2679 4L3.33975 16C2.56995 17.3333 3.53223 19 5.07183 19Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <p className={styles.emptyStateText}>The Invite List is empty</p>
+            </div>
+          )}
         </div>
-        <div className={styles.invitedUsersContainer}>
-          <h2 className={styles.invitedUsersTitle}>Invited Users:</h2>
-          <ul className={styles.invitedUsersList}>
-            {invitedUsers.map((user, index) => (
-              <li key={index}>{user}</li>
-            ))}
-          </ul>
-        </div>
+
+        {notification && (
+          <div className={styles.notification}>{notification}</div>
+        )}
       </div>
-      <div className={styles.footerContainer}>
+<div className="footer-container">
         <Link href="/">
           <a className="flex flex-col items-center text-gray-800">
             <i className="fas fa-home text-2xl"></i>
@@ -117,10 +138,7 @@ export default function Invite() {
         </Link>
         <Link href="/invite">
           <a className="flex flex-col items-center text-gray-800">
-            <div className={styles.inviteIconContainer}>
-              <div className={styles.fadedCircle}></div>
-              <i className="fas fa-users text-2xl"></i>
-            </div>
+            <i className="fas fa-users text-2xl"></i>
             <p className="text-sm">Friends</p>
           </a>
         </Link>
