@@ -8,6 +8,34 @@
   color: black;
 }
 
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height */
+  width: 100vw;  /* Full viewport width */
+}
+
+/* Customize the spinner */
+.fa-spinner {
+  font-size: 3rem; /* Size of the spinner */
+  color: #3498db; /* Spinner color */
+}
+
+/* Optional custom spin animation */
+.fa-spin {
+  animation: fa-spin 2s infinite linear;
+}
+
+@keyframes fa-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .darkMode {
   background-color: black;
   color: white;
