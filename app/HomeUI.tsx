@@ -158,7 +158,7 @@ export default function HomeUI({
         <Link href="/task">
           <a className="flex flex-col items-center text-gray-800">
             <i className="fas fa-clipboard text-2xl"></i>
-            <p className="text-sm">Taskst</p>
+            <p className="text-sm">Tasks</p>
           </a>
         </Link>
       </div>
