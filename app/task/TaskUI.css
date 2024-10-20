@@ -100,19 +100,22 @@ body {
     font-weight: bold;
 }
 .task-icon-container {
-    text-align: center; /* Centers the icon horizontally */
+    width: 100%; /* Full width for centering */
+    display: flex; /* Enables flexbox layout */
+    justify-content: center; /* Centers the icon horizontally */
 }
 
 .task-icon {
-    font-size: 100px;
-    margin: 20px 0;
+    font-size: 100px; /* Size of the icon */
+    margin: 20px 0; /* Vertical spacing */
 }
 
 .task-icon svg {
-    width: 100px;
-    height: 100px;
-    opacity: 0.5;
+    width: 100px; /* Width of the SVG */
+    height: 100px; /* Height of the SVG */
+    opacity: 1; /* Semi-transparent effect */
 }
+
 
 .description {
     font-size: 18px;
