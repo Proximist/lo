@@ -5,12 +5,18 @@
   flex-direction: column;
   min-height: 100vh;
   background-color: white;
+  color: black;
+}
+
+.darkMode {
+  background-color: #212121;
+  color: white;
 }
 
 .content {
   flex-grow: 1;
   padding: 1rem;
-  padding-bottom: 4rem; /* Add padding to accommodate the footer */
+  padding-bottom: 4rem;
 }
 
 .header {
@@ -27,6 +33,11 @@
 .icon {
   width: 4rem;
   height: 4rem;
+  color: black;
+}
+
+.darkMode .icon {
+  color: white;
 }
 
 .icon + .icon {
@@ -34,7 +45,7 @@
 }
 
 .title {
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 500;
   margin-bottom: 1rem;
 }
@@ -47,12 +58,23 @@
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
   margin-bottom: 1.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+.darkMode .inviteButton {
+  background-color: white;
+  color: black;
 }
 
 .invitedSection {
   background-color: #f3f4f6;
   border-radius: 0.5rem;
   padding: 1rem;
+}
+
+.darkMode .invitedSection {
+  background-color: #2c2c2c;
 }
 
 .invitedHeader {
@@ -65,11 +87,26 @@
   width: 1.5rem;
   height: 1.5rem;
   margin-right: 0.5rem;
+  color: black;
+}
+
+.darkMode .invitedIcon {
+  color: white;
 }
 
 .invitedTitle {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: bold;
+}
+
+.invitedList {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.invitedList li {
+  margin-bottom: 0.5rem;
 }
 
 .emptyState {
@@ -77,14 +114,8 @@
   padding: 2rem 0;
 }
 
-.emptyStateIcon {
-  width: 3rem;
-  height: 3rem;
-  margin: 0 auto 1rem;
-}
-
 .emptyStateText {
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: bold;
 }
 
@@ -99,7 +130,7 @@
 .footerContainer {
   background-color: white;
   width: 100%;
-  padding: 1rem;
+  padding: 0.5rem;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -110,23 +141,27 @@
   z-index: 1000;
 }
 
+.darkMode .footerContainer {
+  background-color: #212121;
+  box-shadow: 0 -2px 4px rgba(255, 255, 255, 0.1);
+}
+
 .footerLink {
   display: flex;
   flex-direction: column;
   align-items: center;
   color: black;
-  transition: color 0.3s;
   text-decoration: none;
-}
-
-.footerLink:hover {
-  color: #2d3748;
-}
-
-.footerText {
-  font-weight: 500;
   font-size: 0.75rem;
-  margin-top: 0.25rem;
+}
+
+.darkMode .footerLink {
+  color: white;
+}
+
+.footerLink i {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .activeFooterLink {
@@ -144,4 +179,8 @@
   background-color: rgba(0, 0, 0, 0.1);
   border-radius: 50%;
   z-index: -1;
+}
+
+.darkMode .activeFooterLink::before {
+  background-color: rgba(255, 255, 255, 0.1);
 }
