@@ -79,10 +79,10 @@ export default function Invite() {
 
   if (!user) return (
   <div className="container mx-auto p-4">
-    <CircularProgress />
+    <i className="fas fa-spinner fa-spin"></i>
   </div>
 );
-
+  
   return (
     <div className={styles.container}>
       <div className={styles.content}>
