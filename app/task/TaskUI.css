@@ -101,9 +101,7 @@ body {
 }
 .task-icon-container {
     display: flex;
-    justify-content: center; /* Centers horizontally */
-    align-items: center;    /* Centers vertically (if height is defined) */
-    height: 100vh;         /* Optional: Full viewport height for vertical centering */
+    justify-content: center; /* Centers the icon horizontally */
 }
 
 .task-icon {
