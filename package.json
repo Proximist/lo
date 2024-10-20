@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mui/material": "^5.15.8",
     "@prisma/client": "^5.19.1",
     "@twa-dev/types": "^7.10.0",
     "mongodb": "^6.9.0",
